@@ -8,7 +8,7 @@ type PageProps = {
   searchParams: { [key: string]: string | string[] | undefined };
 };
 
-const NewSaleEntry = async ({ params, searchParams }: PageProps) => {
+const NewSaleEntry = async ({ searchParams }: PageProps) => {
   const enterpriseId = await getCookie("enterpriseId");
 
   const { id } = searchParams;
