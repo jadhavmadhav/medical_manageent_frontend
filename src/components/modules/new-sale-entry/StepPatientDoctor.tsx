@@ -435,7 +435,7 @@ export const StepPatientDoctor = ({
     data: any[],
     person: any,
     setPerson: (p: any) => void,
-    ref: React.RefObject<HTMLInputElement>
+    ref: React.RefObject<HTMLInputElement | null>
   ) => (
     <Card className="p-6 shadow-md border rounded-xl bg-white space-y-4">
       <Label htmlFor={`${type}-search`} className="text-base font-semibold">
