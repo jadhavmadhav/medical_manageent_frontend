@@ -83,9 +83,9 @@ const VendorSelectionDialog = ({ open, onClose, onSave }: VendorSelectionDialogP
                 <SelectContent>
                   {
                   // vendors
-                  [0,1].map(vendor => (
-                    <SelectItem key={vendor?.id} value={vendor?.id}>
-                      {vendor?.name} ({vendor?.companyName})
+                  [0,1].map((vendor,index) => (
+                    <SelectItem key={index} value={"1"}>
+                      {vendor} ({vendor})
                     </SelectItem>
                   ))}
                 </SelectContent>

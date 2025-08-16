@@ -32,18 +32,24 @@ const AddNewInventories = () => {
 
         <TabsContent value="bulk">
           <Card className="p-4">
-            <ImportDataTable />
+            <ImportDataTable extraFieldsForProduct={[]} data={[]} setData={function (data: any): void {
+              throw new Error("Function not implemented.");
+            } } />
           </Card>
         </TabsContent>
 
         <TabsContent value="manual">
           <Card className="p-4">
-            <ManualEntryForm />
+            <ManualEntryForm extraFieldsForProduct={[]} data={[]} setData={function (data: Record<string, any>[]): void {
+              throw new Error("Function not implemented.");
+            } } />
           </Card>
         </TabsContent>
       </Tabs>
 
-      <SaveButton tabValue={tabValue} />
+      <SaveButton tabValue={tabValue} onClick={function (): void {
+        throw new Error("Function not implemented.");
+      } } />
     </div>
   );
 };

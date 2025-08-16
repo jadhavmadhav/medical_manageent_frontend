@@ -56,7 +56,7 @@ export default function InventoryPage() {
           });
           return transformed;
         }),
-        enterpriseId,
+        // enterpriseId,
       };
 
       // Call your API here

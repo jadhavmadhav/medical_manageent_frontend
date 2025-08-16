@@ -9,6 +9,7 @@ interface Enterprise {
   id: string;
   name: string;
   enterpriseCode: string;
+  extraFieldsForProduct: any[];
   // Add other fields as per your API response
 }
 

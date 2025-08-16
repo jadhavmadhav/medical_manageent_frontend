@@ -10,8 +10,8 @@ import * as XLSX from "xlsx";
 
 interface ImportDataTableProps {
   extraFieldsForProduct: any[];
-  data: Record<string, any>[];
-  setData: (data: Record<string, any>[]) => void;
+  data: any[];
+  setData: (data:any) => void;
 }
 
 const ImportDataTable = ({ extraFieldsForProduct, data, setData }: ImportDataTableProps) => {
