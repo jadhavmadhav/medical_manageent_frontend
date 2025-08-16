@@ -9,7 +9,7 @@ import { getInventoryItems } from "@/services/inventory";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle } from "lucide-react";
 import { useState } from "react";
-import { columns } from "./columns";
+import { columns } from "./columns"; 
 
 interface InventoryProps {
   enterpriseId?: string;
@@ -32,7 +32,7 @@ const InventoryView = ({ enterpriseId }: InventoryProps) => {
     queryKey: ["inventoryItems", enterpriseId],
     queryFn: () => getInventoryItems({ enterpriseId }),
     enabled: !!enterpriseId,
-  });
+  }); 
 
   if (isLoading) {
     return (

@@ -1,4 +1,4 @@
-import { cookies as serverCookies } from "next/headers";
+ import { cookies as serverCookies } from "next/headers";
 import Cookies from "js-cookie";
 
 /**
@@ -7,10 +7,10 @@ import Cookies from "js-cookie";
  * @param key The cookie name to fetch
  * @returns The cookie value as a string or undefined
  */
-export async function getCookie(key: string): Promise<string | undefined> {
+export function getCookie(key: string): string | undefined {
   if (typeof window === "undefined") {
     // ✅ Server-side
-    const cookies = await serverCookies();
+    const cookies = serverCookies();
     return cookies.get(key)?.value;
   } else {
     // ✅ Client-side
@@ -24,8 +24,8 @@ export async function getCookie(key: string): Promise<string | undefined> {
  * @param key The cookie name
  * @returns Parsed object or null
  */
-export async function getParsedCookie<T = any>(key: string): Promise<T | null> {
-  const raw = await getCookie(key);
+export function getParsedCookie<T = any>(key: string): T | null {
+  const raw = getCookie(key);
   if (!raw) return null;
 
   try {

@@ -1,20 +1,15 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
-import { getEnterprise } from "@/services/enterprise";
-import Cookies from "js-cookie";
+
+import { useEnterprise } from "@/lib/context/EnterpriseContext";
 
 const Dashboard = () => {
-  const enterpriseId = Cookies.get("enterpriseId");
+  const { enterprise, isLoading, error: enterpriseError } = useEnterprise();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["enterpriseDetails", enterpriseId],
-    queryFn: () => getEnterprise(enterpriseId || ""),
-    enabled: !!enterpriseId,
-  });
+  console.log("enterprise", enterprise);
 
   if (isLoading) return <div>Loading...</div>;
 
-  return <div>Dashboard - {data?.name}</div>;
+  return <div>Dashboard - {enterprise?.name}</div>;
 };
 
 export default Dashboard;

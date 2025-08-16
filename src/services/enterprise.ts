@@ -1,4 +1,5 @@
 import { apiRequestWithAuth } from "@/utils/axios";
+ import Cookies from "js-cookie";
 
 export const getEnterprise = async (id: string): Promise<any> => {
   try {
@@ -8,6 +9,14 @@ export const getEnterprise = async (id: string): Promise<any> => {
       {},
       { id }
     );
+
+    if (request.status === 200) {
+      // Stringify the entire response object
+       Cookies.set("enterpriseDetails", JSON.stringify(request.data), {
+        path: "/",
+        secure: true,
+      });
+    }
     return request.data || null;
   } catch (error) {
     console.error("Failed to fetch enterprise:", error);

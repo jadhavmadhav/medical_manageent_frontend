@@ -1,7 +1,7 @@
-import { cookies } from "next/headers";
+import AddNewInventories from "@/components/modules/add-inventory/page";
 
 const Page = async () => {
-  return <div>Add New Inventory</div>;
+  return <AddNewInventories />;
 };
 
 export default Page;

@@ -9,8 +9,7 @@ import {
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 import { useMutation } from "@tanstack/react-query";
-import { LoginCredentials, userLogin } from "@/services/auth";
-import { getEnterprise } from "@/services/enterprise";
+import { LoginCredentials, userLogin } from "@/services/auth"; 
 
 interface AuthContextType {
   isLoggedIn: boolean;
