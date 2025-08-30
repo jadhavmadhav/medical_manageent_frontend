@@ -12,8 +12,14 @@ import LoadingDialog from "./LoadingDialog";
 import { useEnterprise } from "@/lib/context/EnterpriseContext";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PurchaseNewProduct } from "@/services/add-new-inventory";
+import { useMutation } from "@tanstack/react-query";
 
-export default function InventoryPage() {
+export default function InventoryPage({
+  enterpriseId,
+}: {
+  enterpriseId: string;
+}) {
   const [tabValue, setTabValue] = useState("bulk");
   const [vendorDialogOpen, setVendorDialogOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,27 +32,31 @@ export default function InventoryPage() {
   const [bulkData, setBulkData] = useState<Record<string, any>[]>([]);
   const [manualData, setManualData] = useState<Record<string, any>[]>([]);
 
+  const { mutate: createNewPurchase } = useMutation({
+    mutationFn: PurchaseNewProduct,
+    onError: (error) => {
+      console.log(error);
+      toast.error(error.message);
+    },
+    onSuccess: (data) => {
+      console.log("success", data);
+    },
+  });
+
   const handleSave = async (vendorData: any) => {
     setLoading(true);
     try {
       const dataToSave = tabValue === "bulk" ? bulkData : manualData;
 
+      const { paymentMethod, paymentStatus, purchaseDate, ...restVendorData } =
+        vendorData;
       const payload = {
-        vendor: {
-          id: vendorData.isNew ? undefined : vendorData.id,
-          name: vendorData.name,
-          companyName: vendorData.companyName,
-          mobileNumber: vendorData.mobileNumber,
-          email: vendorData.email,
-          address: vendorData.address,
-          gstNumber: vendorData.gstNumber,
-        },
-        purchaseInfo: {
-          purchaseDate: vendorData.purchaseDate,
-          paymentMethod: vendorData.paymentMethod,
-          paymentStatus: vendorData.paymentStatus,
-        },
-        products: dataToSave.map((item) => {
+        vendorInfo: restVendorData,
+        enterpriseId,
+        purchaseDate: vendorData.purchaseDate,
+        paymentMethod: vendorData.paymentMethod,
+        paymentStatus: vendorData.paymentStatus,
+        inventories: dataToSave.map((item) => {
           const transformed: Record<string, any> = {};
           extraFieldsForProduct.forEach((field) => {
             transformed[field.key] =
@@ -56,12 +66,11 @@ export default function InventoryPage() {
           });
           return transformed;
         }),
-        // enterpriseId,
       };
 
       // Call your API here
       console.log("Saving payload:", payload);
-      // await PurchaseNewProduct(payload);
+      await createNewPurchase(payload);
 
       toast.success("Inventory saved successfully");
       setBulkData([]);
@@ -103,11 +112,17 @@ export default function InventoryPage() {
         onValueChange={setTabValue}
         className="mb-6 flex flex-1"
       >
-        <TabsList className="h-9">
-          <TabsTrigger value="bulk" className="text-sm px-4 py-1">
+        <TabsList className="h-9 flex gap-4">
+          <TabsTrigger
+            value="bulk"
+            className="text-sm px-4 py-1 rounded-md border data-[state=active]:bg-secondary"
+          >
             Bulk Import
           </TabsTrigger>
-          <TabsTrigger value="manual" className="text-sm px-4 py-1">
+          <TabsTrigger
+            value="manual"
+            className="text-sm px-4 py-1 rounded-md border-1 border data-[state=active]:bg-secondary"
+          >
             Manual Entry
           </TabsTrigger>
         </TabsList>
@@ -151,9 +166,9 @@ export default function InventoryPage() {
         open={vendorDialogOpen}
         onClose={() => setVendorDialogOpen(false)}
         onSave={(vendorData) => {
-          setVendorInfo(vendorData);
           handleSave(vendorData); // Pass vendorData to your save function
         }}
+        enterpriseId={enterpriseId!}
       />
 
       <LoadingDialog isLoading={loading} title="Saving Inventory..." />
