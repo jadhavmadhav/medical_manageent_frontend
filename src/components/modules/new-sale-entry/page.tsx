@@ -35,7 +35,13 @@ import type {
 } from "../../../types/new-sale-entry";
 import { toast } from "sonner";
 
-const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
+const NewSaleEntryView = ({
+  enterpriseId,
+  bill_id,
+}: {
+  enterpriseId: string;
+  bill_id?: string;
+}) => {
   const medicineSearchRef = useRef<HTMLInputElement | null>(null);
   const queryClient = useQueryClient();
 
@@ -439,7 +445,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
 
       {/* Modals */}
       <PatientSelectionModal
-        patientModalOpen={modals.patient}
+        patientModalOpen={modals?.patient}
         setPatientModalOpen={(v) => setModals((m) => ({ ...m, patient: v }))}
         patients={patients}
         selectedPatient={selectedPatient}
@@ -450,7 +456,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
       />
 
       <DoctorSelectionModal
-        doctorModalOpen={modals.doctor}
+        doctorModalOpen={modals?.doctor}
         setDoctorModalOpen={(v) => setModals((m) => ({ ...m, doctor: v }))}
         doctors={doctors}
         selectedDoctor={selectedDoctor}
@@ -462,7 +468,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
 
       <NewEntityModal
         entityType="patient"
-        open={modals?.newPatient}
+        open={modals?.newPatient!}
         setOpen={(v) => setModals((m) => ({ ...m, newPatient: v }))}
         onSubmit={createPatientMutation}
         enterpriseId={enterpriseId}
@@ -470,7 +476,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
 
       <NewEntityModal
         entityType="doctor"
-        open={modals?.newDoctor}
+        open={modals?.newDoctor!}
         setOpen={(v) => setModals((m) => ({ ...m, newDoctor: v }))}
         onSubmit={createDoctorMutation}
         enterpriseId={enterpriseId}

@@ -51,11 +51,13 @@ export interface searchDoctorPayload {
 
 export interface Patient {
   id: number;
+  _id: string;
   name: string;
   phone: string;
   address?: string;
   age: number;
   gender: string;
+  mobile_number: string;
 }
 
 export interface Doctor {

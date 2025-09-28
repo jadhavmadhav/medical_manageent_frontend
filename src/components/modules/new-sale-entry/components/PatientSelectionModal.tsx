@@ -15,8 +15,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { Patient } from "./NewSaleEntryView";
+import { Plus } from "lucide-react"; 
+import { Patient } from "@/types/new-sale-entry";
 
 interface PatientSelectionModalProps {
   patientModalOpen: boolean;
