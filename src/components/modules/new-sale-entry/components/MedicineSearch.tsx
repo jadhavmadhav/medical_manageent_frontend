@@ -1,16 +1,20 @@
+// MedicineSearch.tsx
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Product } from "@/types/new-sale-entry";
 import { Search } from "lucide-react";
-import { Product } from "./NewSaleEntryView";
+import React, { useEffect, useRef } from "react";
 
 interface MedicineSearchProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filteredProducts: Product[];
   highlightedIndex: number;
+  // ✨ NEW PROP
   handleSearchKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   addProductToBill: (product: Product) => void;
-  medicineSearchRef: React.RefObject<HTMLInputElement>;
+  medicineSearchRef: React.RefObject<HTMLInputElement | null>;
 }
 
 const MedicineSearch = ({
@@ -22,13 +26,32 @@ const MedicineSearch = ({
   addProductToBill,
   medicineSearchRef,
 }: MedicineSearchProps) => {
+  // Ref to manage the list container and item scrolling
+  const listRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (listRef.current && highlightedIndex >= 0) {
+      // Logic to scroll the highlighted item into view
+      const highlightedItem = listRef.current.children[
+        highlightedIndex
+      ] as HTMLElement;
+      if (highlightedItem) {
+        highlightedItem.scrollIntoView({
+          block: "nearest",
+          inline: "nearest",
+          behavior: "smooth",
+        });
+      }
+    }
+  }, [highlightedIndex]);
+
   return (
     <div className="mb-6">
       <Label
         htmlFor="medicine-search"
-        className="block text-sm font-medium text-gray-700 mb-1"
+        className="block text-sm font-semibold text-gray-900 mb-2"
       >
-        Add Medicine
+        Add Medicine (Use $\uparrow/\downarrow/Enter$ for quick entry)
       </Label>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -36,34 +59,60 @@ const MedicineSearch = ({
           ref={medicineSearchRef}
           id="medicine-search"
           type="text"
-          placeholder="Search medicine by name or composition..."
+          placeholder="Search by Item, Salt, or Barcode..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={handleSearchKeyDown}
-          className="w-full pl-10"
+          onKeyDown={handleSearchKeyDown} // Attached the keyboard handler
+          className="w-full pl-10 h-10 text-base border-blue-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-200"
+          autoComplete="off"
         />
         {filteredProducts.length > 0 && (
-          <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-auto">
-            {filteredProducts.map((product, index) => (
+          <div
+            ref={listRef} // Attached ref for scrolling
+            className="absolute z-20 w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-xl max-h-72 overflow-y-auto"
+          >
+            {filteredProducts?.map((product, index) => (
               <div
                 key={product._id}
                 onClick={() => addProductToBill(product)}
-                className={`p-3 cursor-pointer flex justify-between items-center ${
+                // onMouseEnter={() => setHighlightedIndex(index)} // Better hover UX
+                className={`p-3 cursor-pointer transition-colors flex justify-between items-center ${
                   index === highlightedIndex
-                    ? "bg-blue-100"
-                    : "hover:bg-blue-50"
+                    ? "bg-blue-600 text-white" // Stronger highlight
+                    : "hover:bg-blue-50 text-gray-900"
                 }`}
               >
                 <div>
-                  <div className="font-medium">{product.item}</div>
-                  <div className="text-sm text-gray-500">
-                    {product.saltComposition}
-                  </div>
-                  <div className="text-xs text-gray-400">
-                    Stock: {product.availableQuantity}
+                  <div
+                    className={`font-semibold ${
+                      index === highlightedIndex
+                        ? "text-white"
+                        : "text-gray-900"
+                    }`}
+                  >
+                    {product?.item}
                   </div>
                 </div>
-                <div className="font-semibold">₹{product.sellingPrice}</div>
+                <div className="text-right">
+                  <div
+                    className={`font-bold ${
+                      index === highlightedIndex
+                        ? "text-white"
+                        : "text-blue-600"
+                    }`}
+                  >
+                    ₹{product?.sellingPrice}
+                  </div>
+                  <div
+                    className={`text-xs ${
+                      index === highlightedIndex
+                        ? "text-blue-200"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    Stock: {product?.availableQuantity}
+                  </div>
+                </div>
               </div>
             ))}
           </div>

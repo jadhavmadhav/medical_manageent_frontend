@@ -79,6 +79,10 @@ export interface Product {
   gstPercent: number;
   buyingDate: string;
   availableQuantity: number;
+  schedule?: string;
+  locker?: string;
+  batchNumber?: string;
+  highlightedIndex?: any;
 }
 
 export interface BillItem {
@@ -89,14 +93,15 @@ export interface BillItem {
 }
 
 export interface SaleData {
+  enterpriseId: string;
   patient: Patient | null;
   doctor: Doctor | null;
-  billItems: BillItem[];
-  paymentStatus: string;
-  paymentMode: string;
+  items: BillItem[];
+  status: string;
+  paymentMethod: string;
   subtotal: number;
   totalTax: number;
   grandTotal: number;
   billNumber?: string;
-  date: string;
+  date: any;
 }
