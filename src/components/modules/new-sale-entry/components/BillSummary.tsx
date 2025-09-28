@@ -137,6 +137,7 @@ interface BillSummaryProps {
   setPaymentMode: (mode: string) => void;
   resetForm: () => void;
   completeSale: () => void;
+  isDisabled: boolean;
 }
 
 const BillSummary = ({
@@ -149,6 +150,7 @@ const BillSummary = ({
   setPaymentMode,
   resetForm,
   completeSale,
+  isDisabled,
 }: BillSummaryProps) => {
   return (
     <div className="md:w-96 bg-gray-50 p-6 flex flex-col shadow-inner">
@@ -228,12 +230,17 @@ const BillSummary = ({
       )}
 
       <div className="flex space-x-3 mt-auto pt-6 border-t border-gray-200">
-        <Button variant="outline" onClick={resetForm} className="flex-1">
+        <Button
+          variant="outline"
+          onClick={resetForm}
+          className="flex-1 cursor-pointer"
+        >
           Reset/Cancel
         </Button>
         <Button
+          disabled={isDisabled}
           onClick={completeSale}
-          className="flex-1 bg-blue-600 hover:bg-blue-700 font-bold text-lg"
+          className="flex-1  text-lg cursor-pointer"
         >
           Complete Sale
         </Button>

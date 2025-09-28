@@ -33,6 +33,7 @@ import type {
   BillItem,
   SaleData,
 } from "../../../types/new-sale-entry";
+import { toast } from "sonner";
 
 const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
   const medicineSearchRef = useRef<HTMLInputElement | null>(null);
@@ -62,6 +63,8 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
     status: "unpaid",
   });
 
+  const [patientAndDoctorInfo, serPatientAndDoctorInfo] = useState(false);
+
   // Queries
   const { data: inventories = [] } = useQuery({
     queryKey: ["inventories", enterpriseId],
@@ -89,7 +92,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
     mutationFn: createDoctor,
     onSuccess: (newDoctor) => {
       queryClient.invalidateQueries({ queryKey: ["doctors", enterpriseId] });
-      setSelectedDoctor(newDoctor?.doctor!);
+      setSelectedDoctor(newDoctor?.doctor ?? null);
       setModals((m) => ({ ...m, newDoctor: false }));
     },
     onError: (err) => console.error(err),
@@ -107,7 +110,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
     onError: (e: any) => console.error(`Error creating patient: ${e.message}`),
   });
 
-  const { mutate: createBillMutation } = useMutation({
+  const { mutate: createBillMutation, isPending } = useMutation({
     mutationFn: createNewBill,
     onSuccess: (data) => {
       console.log("Bill created:", data);
@@ -277,8 +280,19 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
       alert("Add at least one medicine");
       return;
     }
-    if (!selectedPatient) {
+
+    const patientAndDoctorDetailsRequired = billItems?.some((i) =>
+      ["H1", "H"].includes(i.schedule)
+    );
+    serPatientAndDoctorInfo(true);
+
+    if (patientAndDoctorDetailsRequired && !selectedPatient) {
       alert("Please select a patient before completing the sale.");
+      return;
+    }
+    if (patientAndDoctorDetailsRequired && !selectedDoctor) {
+      console.log("llkkkkk");
+      toast.error("kkkk");
       return;
     }
     const saleData = collectSaleData(selectedPatient);
@@ -332,7 +346,13 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
             {/* Patient & Doctor Selection Area - Refined UI */}
             <div className="flex flex-wrap gap-4 mb-6 pb-4 border-b">
               {/* Patient Selection */}
-              <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border border-blue-200 min-w-[200px]">
+              <div
+                className={`flex items-center gap-3 p-3  rounded-lg border ${
+                  patientAndDoctorInfo && !selectedPatient
+                    ? "border-red-400 bg-red-50"
+                    : "border-blue-200 bg-blue-50"
+                } min-w-[200px]`}
+              >
                 <User className="h-5 w-5 text-blue-600" />
                 <div className="flex flex-col">
                   {selectedPatient ? (
@@ -354,7 +374,13 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
               </div>
 
               {/* Doctor Selection */}
-              <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200 min-w-[200px]">
+              <div
+                className={`flex items-center gap-3 p-3  rounded-lg border ${
+                  patientAndDoctorInfo && !selectedDoctor
+                    ? "border-red-400 bg-red-50"
+                    : "bg-green-50 rounded-lg border border-green-200 "
+                } min-w-[200px]`}
+              >
                 <Stethoscope className="h-5 w-5 text-green-600" />
                 <div className="flex flex-col">
                   {selectedDoctor ? (
@@ -397,6 +423,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
 
           {/* Right panel */}
           <BillSummary
+            isDisabled={isPending || billItems.length === 0}
             subtotal={subtotal}
             totalTax={totalTax}
             grandTotal={grandTotal}
@@ -435,7 +462,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
 
       <NewEntityModal
         entityType="patient"
-        open={modals.newPatient}
+        open={modals?.newPatient}
         setOpen={(v) => setModals((m) => ({ ...m, newPatient: v }))}
         onSubmit={createPatientMutation}
         enterpriseId={enterpriseId}
@@ -443,7 +470,7 @@ const NewSaleEntryView = ({ enterpriseId }: { enterpriseId: string }) => {
 
       <NewEntityModal
         entityType="doctor"
-        open={modals.newDoctor}
+        open={modals?.newDoctor}
         setOpen={(v) => setModals((m) => ({ ...m, newDoctor: v }))}
         onSubmit={createDoctorMutation}
         enterpriseId={enterpriseId}
