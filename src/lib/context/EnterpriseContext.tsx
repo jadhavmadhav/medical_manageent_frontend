@@ -3,13 +3,14 @@
 import { createContext, useContext, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getEnterprise } from "@/services/enterprise";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 
 interface Enterprise {
   id: string;
   name: string;
   enterpriseCode: string;
   extraFieldsForProduct: any[];
+  billTableForCreateBill: any[];
   // Add other fields as per your API response
 }
 
@@ -29,7 +30,6 @@ export function EnterpriseProvider({
   children: React.ReactNode;
 }) {
   const enterpriseId = Cookies.get("enterpriseId");
-
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["enterprise"],

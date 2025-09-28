@@ -1,15 +1,10 @@
-"use client";
+import DashboardView from "@/components/modules/dashboard/page";
+import { getCookie } from "@/utils/getCookie";
 
-import { useEnterprise } from "@/lib/context/EnterpriseContext";
+const Page = async () => {
+  const enterpriseId = await getCookie("enterpriseId");
 
-const Dashboard = () => {
-  const { enterprise, isLoading, error: enterpriseError } = useEnterprise();
-
-  console.log("enterprise", enterprise);
-
-  if (isLoading) return <div>Loading...</div>;
-
-  return <div>Dashboard - {enterprise?.name}</div>;
+  return <DashboardView enterpriseId={enterpriseId!} />;
 };
 
-export default Dashboard;
+export default Page;

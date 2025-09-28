@@ -61,7 +61,7 @@ export const updatePatient = async (payload: any) => {
 
 export const searchPatients = async (payload: {
   enterpriseId: string;
-  search: string;
+  search?: string;
 }) => {
   const response = await apiRequestWithAuth(
     "post",

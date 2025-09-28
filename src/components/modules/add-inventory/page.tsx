@@ -26,6 +26,7 @@ export default function InventoryPage({
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [vendorInfo, setVendorInfo] = useState<any>(null);
   const { enterprise } = useEnterprise();
+  
   const extraFieldsForProduct = enterprise?.extraFieldsForProduct || [];
 
   // State for both bulk and manual data
