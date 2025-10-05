@@ -120,15 +120,15 @@ const NewSaleEntryView = ({
   }, [billData]);
 
   useEffect(() => {
-    if (patients.length > 0) {
+    if (!selectedPatient && patients?.length) {
       const defaultPatient = patients.find(
         (p: Patient) => p.name === "Walk-in Customer"
       );
-      if (!selectedPatient && defaultPatient) {
+      if (defaultPatient) {
         setSelectedPatient(defaultPatient);
       }
     }
-  }, [patients]);
+  }, [patients, selectedPatient]);
 
   // Mutations
   const { mutate: createDoctorMutation } = useMutation({
@@ -200,17 +200,22 @@ const NewSaleEntryView = ({
 
   // Product search filter
   useEffect(() => {
-    if (!searchTerm.trim()) {
+    const term = searchTerm.trim().toLowerCase();
+
+    if (!term) {
       setFilteredProducts([]);
       setHighlightedIndex(-1);
       return;
     }
-    const filtered = inventories?.filter((p: Product) =>
-      p.item.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredProducts(filtered);
-    setHighlightedIndex(0);
-  }, [searchTerm, inventories?.length]);
+
+    if (Array.isArray(inventories) && inventories.length > 0) {
+      const filtered = inventories.filter((p: Product) =>
+        p.item.toLowerCase().includes(term)
+      );
+      setFilteredProducts(filtered);
+      setHighlightedIndex(filtered.length > 0 ? 0 : -1);
+    }
+  }, [searchTerm, inventories]);
 
   // Focus on mount
   useEffect(() => {
@@ -339,32 +344,91 @@ const NewSaleEntryView = ({
     ]
   );
 
+  // const handleCompleteSale = useCallback(() => {
+  //   // 💡 UX Improvement: Use a better notification/toast system in a real app
+  //   if (billItems.length === 0) {
+  //     alert("Add at least one medicine");
+  //     return;
+  //   }
+
+  //   const patientAndDoctorDetailsRequired = billItems?.some((i) =>
+  //     ["H1", "H"].includes(i.schedule)
+  //   );
+
+  //   if (patientAndDoctorDetailsRequired && !selectedPatient) {
+  //     toast.error("Please select a patient.");
+  //     serPatientAndDoctorInfo(true);
+  //     return;
+  //   }
+  //   if (patientAndDoctorDetailsRequired && !selectedDoctor) {
+  //     serPatientAndDoctorInfo(true);
+  //     toast.error("Please select a doctor.");
+  //     return;
+  //   }
+  //   const saleData = collectSaleData(selectedPatient);
+
+  //   bill_id
+  //     ? updateBill({ ...saleData, _id: bill_id })
+  //     : createBillMutation(saleData);
+  // }, [billItems, selectedPatient, collectSaleData, createBillMutation]);
+
   const handleCompleteSale = useCallback(() => {
-    // 💡 UX Improvement: Use a better notification/toast system in a real app
-    if (billItems.length === 0) {
-      alert("Add at least one medicine");
+    if (!billItems?.length) {
+      toast.warning(
+        "Please add at least one medicine before completing the sale."
+      );
       return;
     }
 
-    const patientAndDoctorDetailsRequired = billItems?.some((i) =>
-      ["H1", "H"].includes(i.schedule)
+    const requiresDetails = billItems.some((item) =>
+      ["H1", "H"].includes(item.schedule)
     );
 
-    if (patientAndDoctorDetailsRequired && !selectedPatient) {
-      toast.error("Please select a patient.");
-      serPatientAndDoctorInfo(true);
-      return;
+    // 🧠 If sale requires patient & doctor info
+    if (requiresDetails) {
+      if (!selectedPatient) {
+        serPatientAndDoctorInfo(true);
+        toast.error(
+          "Patient details are required for Schedule H/H1 medicines."
+        );
+        return;
+      }
+
+      if (!selectedDoctor) {
+        serPatientAndDoctorInfo(true);
+        toast.error("Doctor details are required for Schedule H/H1 medicines.");
+        return;
+      }
     }
-    if (patientAndDoctorDetailsRequired && !selectedDoctor) {
-      serPatientAndDoctorInfo(true);
-      toast.error("Please select a doctor.");
-      return;
+
+    try {
+      const saleData = collectSaleData(selectedPatient);
+
+      if (!saleData) {
+        toast.error("Something went wrong while preparing the bill.");
+        return;
+      }
+
+      if (bill_id) {
+        updateBill({ ...saleData, _id: bill_id });
+        toast.success("Bill updated successfully.");
+      } else {
+        createBillMutation(saleData);
+        toast.success("Bill created successfully.");
+      }
+    } catch (error) {
+      console.error("Error completing sale:", error);
+      toast.error("Failed to complete sale. Please try again.");
     }
-    const saleData = collectSaleData(selectedPatient);
-    bill_id
-      ? updateBill({ ...saleData, _id: bill_id })
-      : createBillMutation(saleData);
-  }, [billItems, selectedPatient, collectSaleData, createBillMutation]);
+  }, [
+    billItems,
+    selectedPatient,
+    selectedDoctor,
+    bill_id,
+    collectSaleData,
+    createBillMutation,
+    updateBill,
+  ]);
 
   // ✨ NEW: Keyboard Navigation Handler for Search
   const handleSearchKeyDown = useCallback(
