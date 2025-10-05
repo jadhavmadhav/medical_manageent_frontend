@@ -22,16 +22,6 @@ import {
 } from "recharts";
 
 const SalesPerformance = ({ enterpriseId }: { enterpriseId: string }) => {
-  const salesData = [
-    { day: "Mon", sales: 12500 },
-    { day: "Tue", sales: 19500 },
-    { day: "Wed", sales: 8500 },
-    { day: "Thu", sales: 22500 },
-    { day: "Fri", sales: 17500 },
-    { day: "Sat", sales: 28500 },
-    { day: "Sun", sales: 14500 },
-  ];
-
   const salesChartConfig = {
     sales: {
       label: "Sales",

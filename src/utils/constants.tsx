@@ -1,5 +1,8 @@
 // "use client";
 
+import { Button } from "@/components/ui/button";
+import { Banknote, CreditCard, Globe, Smartphone, Wallet } from "lucide-react";
+
 export const dateFormatter = (date: any) => {
   if (!date) return "";
   const d = new Date(date);
@@ -75,3 +78,48 @@ export function renderStockProgress(quantity: number, saleQuantity: number) {
     </div>
   );
 }
+
+export const PaymentStatusBadge = (status: any) => {
+  let badgeClasses = "p-2 capitalize w-full min-w-[60px]"; // Base classes
+
+  if (status === "paid" || status === "completed") {
+    // Green for success/completion
+    badgeClasses += "bg-green-500 text-white bg-green-600";
+  } else if (status === "pending" || status === "partial") {
+    // Orange/Amber for caution/waiting
+    badgeClasses += "bg-orange-400 text-black bg-orange-500";
+  } else if (
+    status === "returned" ||
+    status === "cancelled" ||
+    status === "failed"
+  ) {
+    // Red for failure/reversal
+    badgeClasses += "bg-red-500 text-white bg-red-600";
+  } else {
+    // Blue/Gray for a neutral default status
+    badgeClasses += "bg-blue-100 text-blue-800 bg-blue-200";
+  }
+
+  return <Button className={badgeClasses}>{status}</Button>;
+};
+
+export const getPaymentMethodIcon = (method: string) => {
+  const lowerMethod = method.toLowerCase();
+  const iconClass = "h-4 w-4 mr-1.5"; // consistent icon size and spacing
+
+  if (lowerMethod === "cash") {
+    return <Banknote className={iconClass} />;
+  }
+  if (lowerMethod === "card") {
+    return <CreditCard className={iconClass} />;
+  }
+  if (lowerMethod === "upi") {
+    // Smartphone icon for UPI/Digital transactions in medical context
+    return <Smartphone className={iconClass} />;
+  }
+  if (lowerMethod === "wallet") {
+    return <Wallet className={iconClass} />;
+  }
+  // Default icon for 'Other' or unknown methods
+  return <Globe className={iconClass} />;
+};

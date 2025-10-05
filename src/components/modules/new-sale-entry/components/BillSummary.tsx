@@ -138,6 +138,7 @@ interface BillSummaryProps {
   resetForm: () => void;
   completeSale: () => void;
   isDisabled: boolean;
+  confirmBtnText: string;
 }
 
 const BillSummary = ({
@@ -151,6 +152,7 @@ const BillSummary = ({
   resetForm,
   completeSale,
   isDisabled,
+  confirmBtnText,
 }: BillSummaryProps) => {
   return (
     <div className="md:w-96 bg-gray-50 p-6 flex flex-col shadow-inner">
@@ -184,11 +186,11 @@ const BillSummary = ({
         </Label>
         <div className="flex gap-3">
           <Button
-            variant={paymentStatus === "unpaid" ? "destructive" : "outline"} // Red for Unpaid
-            onClick={() => setPaymentStatus("unpaid")}
+            variant={paymentStatus === "pending" ? "destructive" : "outline"} // Red for Unpaid
+            onClick={() => setPaymentStatus("pending")}
             className="flex-1 transition-all"
           >
-            Unpaid
+            Pending
           </Button>
           <Button
             // Custom style for green 'Paid' button, assuming no 'success' variant is defined
@@ -242,7 +244,7 @@ const BillSummary = ({
           onClick={completeSale}
           className="flex-1  text-lg cursor-pointer"
         >
-          Complete Sale
+          {confirmBtnText}
         </Button>
       </div>
     </div>

@@ -14,11 +14,10 @@ const NewSaleEntry = async ({ params, searchParams }: PageProps) => {
   console.log("Params:", resolvedParams);
   console.log("Search Params:", resolvedSearchParams);
 
-  const id = resolvedSearchParams?.id as string;
+  let idValue = resolvedSearchParams?.id;
+  const id = Array.isArray(idValue) ? idValue[0] : idValue || "";
 
-  return (
-    <NewSaleEntryView enterpriseId={enterpriseId || ""} bill_id={id ?? ""} />
-  );
+  return <NewSaleEntryView enterpriseId={enterpriseId!} bill_id={id} />;
 };
 
 export default NewSaleEntry;

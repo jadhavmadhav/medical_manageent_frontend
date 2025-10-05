@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { dateFormatter } from "@/utils/constants";
+import { dateFormatter, PaymentStatusBadge } from "@/utils/constants";
 
 export const columns = [
   { accessorKey: "id", header: "S.No", width: 80, sortable: false },
@@ -32,18 +32,10 @@ export const columns = [
   {
     accessorKey: "paymentStatus",
     header: "Status",
-    width: 150,
+    width: 200,
     cell: (params: any) => {
-      const statusText = params.value === "completed" ? "Done" : "Pending";
-      return (
-        <Button
-          aria-label={`Payment status: ${statusText}`}
-          tabIndex={0}
-          //   onKeyDown={(e) => handleKeyDown(e, () => {})}
-        >
-          {statusText}
-        </Button>
-      );
+      const statusText = params.getValue();
+      return PaymentStatusBadge(statusText);
     },
   },
   {
@@ -54,7 +46,9 @@ export const columns = [
     cell: (params: any) => (
       <div className="flex gap-2">
         <Button
-        //  onClick={() => navigate(`/purchase-bills/${params.row._id}`)}
+          color="primary"
+          variant="outline"
+          //  onClick={() => navigate(`/purchase-bills/${params.row._id}`)}
         >
           View
         </Button>

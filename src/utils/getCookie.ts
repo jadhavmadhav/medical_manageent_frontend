@@ -1,4 +1,4 @@
- import { cookies as serverCookies } from "next/headers";
+import { cookies as serverCookies } from "next/headers";
 import Cookies from "js-cookie";
 
 /**
@@ -35,3 +35,4 @@ export async function getParsedCookie<T = any>(key: string): Promise<T | null> {
     return null;
   }
 }
+

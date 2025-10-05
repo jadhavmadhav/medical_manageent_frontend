@@ -16,7 +16,7 @@ const DashboardView = ({ enterpriseId }: { enterpriseId: string }) => {
     <div className="min-h-screen bg-background p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold">Medical Billing Dashboard</h1>
+          <h1 className="text-3xl font-bold"> Dashboard</h1>
         </div>
         <div className="flex items-center space-x-4">
           <Button>

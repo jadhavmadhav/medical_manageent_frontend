@@ -21,8 +21,10 @@ import {
   createNewBill,
   createPatient,
   getAllInventories,
+  getBillById,
   searchDoctors,
   searchPatients,
+  UpdateBill,
 } from "@/services/new-sale-entry";
 
 // Interfaces
@@ -34,6 +36,7 @@ import type {
   SaleData,
 } from "../../../types/new-sale-entry";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const NewSaleEntryView = ({
   enterpriseId,
@@ -66,10 +69,12 @@ const NewSaleEntryView = ({
 
   const [payment, setPayment] = useState({
     mode: "cash",
-    status: "unpaid",
+    status: "pending",
   });
 
   const [patientAndDoctorInfo, serPatientAndDoctorInfo] = useState(false);
+
+  const router = useRouter();
 
   // Queries
   const { data: inventories = [] } = useQuery({
@@ -92,6 +97,38 @@ const NewSaleEntryView = ({
     enabled: !!enterpriseId,
     select: (data) => data?.doctors || [],
   });
+
+  const { data: billData } = useQuery<{ result: any }>({
+    queryKey: ["billData", bill_id],
+    queryFn: () => getBillById(bill_id!),
+    select: (data) => data.result, // now billData is Bill | undefined
+    enabled: !!bill_id,
+  });
+
+  useEffect(() => {
+    if (billData) {
+      const { doctor, patient, items, paymentMethod, status } = billData as any;
+
+      setSelectedDoctor(doctor);
+      setSelectedPatient(patient);
+      setBillItems(items);
+      setPayment({
+        mode: paymentMethod,
+        status,
+      });
+    }
+  }, [billData]);
+
+  useEffect(() => {
+    if (patients.length > 0) {
+      const defaultPatient = patients.find(
+        (p: Patient) => p.name === "Walk-in Customer"
+      );
+      if (!selectedPatient && defaultPatient) {
+        setSelectedPatient(defaultPatient);
+      }
+    }
+  }, [patients]);
 
   // Mutations
   const { mutate: createDoctorMutation } = useMutation({
@@ -120,10 +157,30 @@ const NewSaleEntryView = ({
     mutationFn: createNewBill,
     onSuccess: (data) => {
       console.log("Bill created:", data);
+      toast.success(data?.message);
+      serPatientAndDoctorInfo(false);
       resetForm();
+    },
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
+  const { mutate: updateBill, isPending: isUpdating } = useMutation({
+    mutationKey: ["update-bill"],
+    mutationFn: UpdateBill,
+    onSuccess: (data) => {
+      console.log("Bill created:", data);
+      toast.success(data?.message);
+      serPatientAndDoctorInfo(false);
+      resetForm();
+      router.push(`/patient-bills`);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+  console.log("isUpdating", isUpdating);
   // Derived totals
   const subtotal = useMemo(
     () => billItems.reduce((sum, item) => sum + item.total, 0),
@@ -148,17 +205,19 @@ const NewSaleEntryView = ({
       setHighlightedIndex(-1);
       return;
     }
-    const filtered = inventories.filter((p: Product) =>
+    const filtered = inventories?.filter((p: Product) =>
       p.item.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredProducts(filtered);
     setHighlightedIndex(0);
-  }, [searchTerm, inventories]);
+  }, [searchTerm, inventories?.length]);
 
   // Focus on mount
   useEffect(() => {
     medicineSearchRef.current?.focus();
-  }, []);
+    if (bill_id) {
+    }
+  }, [bill_id]);
 
   // Memoized handlers
   const addProductToBill = useCallback(
@@ -252,7 +311,7 @@ const NewSaleEntryView = ({
     setSelectedPatient(null);
     setSelectedDoctor(null);
     setBillItems([]);
-    setPayment({ mode: "cash", status: "unpaid" });
+    setPayment({ mode: "cash", status: "pending" });
     medicineSearchRef.current?.focus();
   }, []);
 
@@ -290,19 +349,21 @@ const NewSaleEntryView = ({
     const patientAndDoctorDetailsRequired = billItems?.some((i) =>
       ["H1", "H"].includes(i.schedule)
     );
-    serPatientAndDoctorInfo(true);
 
     if (patientAndDoctorDetailsRequired && !selectedPatient) {
-      alert("Please select a patient before completing the sale.");
+      toast.error("Please select a patient.");
+      serPatientAndDoctorInfo(true);
       return;
     }
     if (patientAndDoctorDetailsRequired && !selectedDoctor) {
-      console.log("llkkkkk");
-      toast.error("kkkk");
+      serPatientAndDoctorInfo(true);
+      toast.error("Please select a doctor.");
       return;
     }
     const saleData = collectSaleData(selectedPatient);
-    createBillMutation(saleData);
+    bill_id
+      ? updateBill({ ...saleData, _id: bill_id })
+      : createBillMutation(saleData);
   }, [billItems, selectedPatient, collectSaleData, createBillMutation]);
 
   // ✨ NEW: Keyboard Navigation Handler for Search
@@ -336,9 +397,7 @@ const NewSaleEntryView = ({
 
   return (
     <div className="h-full p-4 flex flex-col">
-      <h1 className="text-3xl font-extrabold text-gray-900">
-        Medical Store Sale Entry
-      </h1>
+      <h1 className="text-3xl font-extrabold text-gray-900">New Sale Entry</h1>
 
       <Card className="p-0 overflow-hidden w-full mt-6 flex-grow flex flex-col shadow-lg border-2">
         <Instructions
@@ -430,6 +489,13 @@ const NewSaleEntryView = ({
           {/* Right panel */}
           <BillSummary
             isDisabled={isPending || billItems.length === 0}
+            confirmBtnText={
+              bill_id
+                ? "Update Bill"
+                : isUpdating || isPending
+                ? "Processing..."
+                : "Create New Entry"
+            }
             subtotal={subtotal}
             totalTax={totalTax}
             grandTotal={grandTotal}
