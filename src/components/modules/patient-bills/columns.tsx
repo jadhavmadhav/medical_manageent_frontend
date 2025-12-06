@@ -7,6 +7,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "../../ui/button";
 import { ReturnConfirmationDialog } from "../../return-bill-confirmation";
 import { ViewBill } from "./components/view-bill";
+import { DownloadInvoice } from "./components/download-invoice";
 
 interface PatientBills {
   id: string;
@@ -114,7 +115,8 @@ export const columns: ColumnDef<PatientBills>[] = [
       console.log("row", row);
       return (
         <div className="flex items-center gap-5 justify-center">
-          <Button color="primary">Download</Button>
+          {/* <Button color="primary">Download</Button> */}
+          <DownloadInvoice id={row._id!} />
           {/* <Button
             color="primary"
             variant="outline"

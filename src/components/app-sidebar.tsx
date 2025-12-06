@@ -34,9 +34,6 @@
 // } from "@/components/ui/sidebar";
 // import { title } from "process";
 
-  
-
-
 // const data = {
 //   user: {
 //     name: "shadcn",
@@ -95,7 +92,7 @@
 //     {
 //       title:"Add Inventory",
 //       url:"/add-inventory",
-//       icon: 
+//       icon:
 //     },
 //     {
 //       title:"Purchase Bills",
@@ -125,7 +122,6 @@
 //   ],
 // };
 
-
 // export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 //   return (
 //     <Sidebar collapsible="icon" {...props}>
@@ -143,14 +139,6 @@
 //     </Sidebar>
 //   );
 // }
-
-
-
-
-
-
-
-
 
 "use client";
 
@@ -236,7 +224,7 @@ const data = {
       icon: TrendingUp,
     },
     {
-      title: "Return Inventories",
+      title: "Return Bills",
       url: "/return-inventory",
       icon: RotateCcw,
     },
@@ -246,36 +234,14 @@ const data = {
       icon: Boxes,
     },
     {
-      title: "Add Inventory",
-      url: "/add-inventory",
-      icon: PackagePlus, 
-    },
-    {
       title: "Purchase Bills",
       url: "/purchase-bills",
-      icon: FileBadge2,  
+      icon: FileBadge2,
     },
     {
       title: "New Purchase",
       url: "/new-purchase",
-      icon: ShoppingCart, 
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Layers3,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: TrendingUp,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Landmark,
+      icon: ShoppingCart,
     },
   ],
 };
@@ -288,7 +254,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

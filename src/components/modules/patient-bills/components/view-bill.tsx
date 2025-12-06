@@ -190,7 +190,7 @@ export function ViewBill({ bill }: ViewBillProps) {
     <AlertDialog>
       {/* Trigger Button */}
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="min-w-[100px]">
+        <Button variant="outline" className="min-w-[100px] cursor-pointer">
           View
         </Button>
       </AlertDialogTrigger>
@@ -198,7 +198,7 @@ export function ViewBill({ bill }: ViewBillProps) {
       {/* Custom Wide Dialog */}
       <AlertDialogContent
         className="
-          w-[600px] max-w-[800px]
+          w-[600px] min-w-[60vw] max-w-[800px]
           p-6 rounded-2xl shadow-2xl
           bg-white border
         "

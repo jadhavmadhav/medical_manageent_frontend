@@ -563,9 +563,9 @@ const NewSaleEntryView = ({
             subtotal={subtotal}
             totalTax={totalTax}
             grandTotal={grandTotal}
-            paymentStatus={payment.status}
+            paymentStatus={payment?.status}
             setPaymentStatus={(s) => setPayment((p) => ({ ...p, status: s }))}
-            paymentMode={payment.mode}
+            paymentMode={payment?.mode}
             setPaymentMode={(m) => setPayment((p) => ({ ...p, mode: m }))}
             resetForm={resetForm}
             completeSale={handleCompleteSale}

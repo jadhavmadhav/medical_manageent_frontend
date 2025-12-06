@@ -3,14 +3,14 @@
 
 @custom-variant dark (&:is(.dark *));
 
-:root {
+/* :root {
   --background: oklch(1.0000 0 0);
   --foreground: oklch(0.2686 0 0);
   --card: oklch(1.0000 0 0);
   --card-foreground: oklch(0.2686 0 0);
   --popover: oklch(1.0000 0 0);
   --popover-foreground: oklch(0.2686 0 0);
-  --primary: oklch(0.6563 0.1071 185.3446);
+  --primary: #008080;
   --primary-foreground: oklch(0 0 0);
   --secondary: oklch(0.7075 0.1813 52.2424);
   --secondary-foreground: oklch(0.4461 0.0263 256.8018);
@@ -150,7 +150,122 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
+} */
+
+
+
+
+/* ========== MEDICAL STORE / PHARMACY THEME (2025) ========== */
+/* Works perfectly with html2canvas-pro → no oklch() errors! */
+
+:root {
+  /* Primary Brand Color - Trustworthy Teal (Medical Standard) */
+  --primary: 18 129 129;           /* #128181 - Teal */
+  --primary-foreground: 255 255 255;
+
+  /* Background & Cards */
+  --background: 255 255 255;
+  --foreground: 17 24 39;          /* Dark gray text */
+  --card: 255 255 255;
+  --card-foreground: 17 24 39;
+
+  /* Secondary / Accent */
+  --secondary: 240 249 255;        /* Very light blue */
+  --secondary-foreground: 30 64 175;
+
+  /* Success, Info, Warning */
+  --success: 34 197 94;             /* Green-500 */
+  --info: 59 130 246;               /* Blue-500 */
+  --warning: 251 146 60;            /* Orange-400 */
+  --danger: 239 68 68;              /* Red-500 */
+
+  /* Muted & Borders */
+  --muted: 249 250 251;
+  --muted-foreground: 107 114 128;
+  --border: 229 231 235;
+  --input: 229 231 235;
+  --ring: 59 130 246;
+
+  /* /* Sidebar & Navigation */
+  --sidebar: 255 255 255;
+  --sidebar-foreground: 17 24 39;
+  --sidebar-primary: 18 129 129;
+  --sidebar-primary-foreground: 255 255 255;
+  --sidebar-accent: 240 249 255;
+  --sidebar-border: 229 231 235;
+  --sidebar-accent-foreground: 240 249 255;
+
+  /* Radius & Shadows */
+  --radius: 0.5rem;
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 }
+
+/* Dark Mode - Clean & Professional (Optional but beautiful) */
+.dark {
+  --background: 15 23 42;
+  --foreground: 241 245 249;
+  --card: 30 41 59;
+  --card-foreground: 241 245 249;
+
+  --primary: 94 234 212;           /* Teal-300 in dark */
+  --primary-foreground: 15 23 42;
+
+  --secondary: 51 65 85;
+  --secondary-foreground: 148 163 184;
+
+  --muted: 51 65 85;
+  --muted-foreground: 148 163 184;
+  --border: 51 65 85;
+  --input: 51 65 85;
+  --ring: 94 234 212;
+
+  --sidebar: 15 23 42;
+  --sidebar-foreground: 241 245 249;
+  --sidebar-primary: 94 234 212;
+  --sidebar-primary-foreground: 15 23 42;
+}
+
+/* Apply to Tailwind using @theme */
+@theme inline {
+  --color-primary: rgb(var(--primary));
+  --color-primary-foreground: rgb(var(--primary-foreground));
+  --color-secondary: rgb(var(--secondary));
+  --color-secondary-foreground: rgb(var(--secondary-foreground));
+  --color-background: rgb(var(--background));
+  --color-foreground: rgb(var(--foreground));
+  --color-card: rgb(var(--card));
+  --color-card-foreground: rgb(var(--card-foreground));
+  --color-muted: rgb(var(--muted));
+  --color-muted-foreground: rgb(var(--muted-foreground));
+  --color-border: rgb(var(--border));
+  --color-input: rgb(var(--input));
+  --color-ring: rgb(var(--ring));
+  --color-success: rgb(var(--success));
+  --color-info: rgb(var(--info));
+  --color-warning: rgb(var(--warning));
+  --color-danger: rgb(var(--danger));
+
+  --color-sidebar: rgb(var(--sidebar));
+  --color-sidebar-foreground: rgb(var(--sidebar-foreground));
+  --color-sidebar-primary: rgb(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: rgb(var(--sidebar-primary-foreground));
+
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+
+  --radius: var(--radius);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --shadow: var(--shadow);
+  --shadow-md: var(--shadow-md);
+  --shadow-lg: var(--shadow-lg);
+}
+
+
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -158,4 +273,31 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+
+/* Medical-themed buttons & badges */
+.btn-primary {
+  @apply bg-[rgb(var(--primary))] text-[rgb(var(--primary-foreground))] hover:opacity-90 font-medium px-5 py-2.5 rounded-lg transition;
+}
+
+.btn-success {
+  @apply bg-green-600 text-white hover:bg-green-700 font-medium px-5 py-2.5 rounded-lg;
+}
+
+.btn-danger {
+  @apply bg-red-600 text-white hover:bg-red-700 font-medium px-5 py-2.5 rounded-lg;
+}
+
+.badge-stock-low {
+  @apply bg-orange-100 text-orange-800 text-xs font-medium px-2.5 py-1 rounded-full;
+}
+
+.badge-expired {
+  @apply bg-red-100 text-red-800 text-xs font-medium px-2.5 py-1 rounded-full;
+}
+
+.badge-prescription {
+  @apply bg-teal-100 text-teal-800 text-xs font-medium px-2.5 py-1 rounded-full;
 }

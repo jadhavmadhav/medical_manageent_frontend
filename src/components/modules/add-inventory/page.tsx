@@ -26,7 +26,7 @@ export default function InventoryPage({
   const [isPageLoading, setIsPageLoading] = useState(true);
   const [vendorInfo, setVendorInfo] = useState<any>(null);
   const { enterprise } = useEnterprise();
-  
+
   const extraFieldsForProduct = enterprise?.extraFieldsForProduct || [];
 
   // State for both bulk and manual data
@@ -103,9 +103,7 @@ export default function InventoryPage({
   return (
     <div className="p-4 sm:p-6 flex flex-col h-full">
       <div className="flex items-center mb-6">
-        <h1 className="ml-2 text-2xl font-semibold text-muted-foreground">
-          Medical Inventory Management
-        </h1>
+        <h1 className="text-2xl font-bold">Medical Inventory Management</h1>
       </div>
 
       <Tabs
@@ -116,13 +114,13 @@ export default function InventoryPage({
         <TabsList className="h-9 flex gap-4">
           <TabsTrigger
             value="bulk"
-            className="text-sm px-4 py-1 rounded-md border data-[state=active]:bg-secondary"
+            className=" cursor-pointer text-sm px-4 py-1 rounded-md border data-[state=active]:bg-secondary"
           >
             Bulk Import
           </TabsTrigger>
           <TabsTrigger
             value="manual"
-            className="text-sm px-4 py-1 rounded-md border-1 border data-[state=active]:bg-secondary"
+            className=" cursor-pointer text-sm px-4 py-1 rounded-md border-1  data-[state=active]:bg-secondary"
           >
             Manual Entry
           </TabsTrigger>

@@ -23,3 +23,8 @@ export const returnBillItems = async (payload: ReturnBillItemsPayload) => {
   const response = await apiRequestWithAuth("post", "/return-items", payload);
   return response || null;
 };
+
+export const getInvoiceDetails = async (billNo: string) => {
+  const response = await apiRequestWithAuth("get", `/getInvoice/${billNo}`);
+  return response || null;
+};
