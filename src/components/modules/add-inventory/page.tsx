@@ -54,12 +54,12 @@ export default function InventoryPage({
       const payload = {
         vendorInfo: restVendorData,
         enterpriseId,
-        purchaseDate: vendorData.purchaseDate,
-        paymentMethod: vendorData.paymentMethod,
-        paymentStatus: vendorData.paymentStatus,
-        inventories: dataToSave.map((item) => {
+        purchaseDate: vendorData?.purchaseDate,
+        paymentMethod: vendorData?.paymentMethod,
+        paymentStatus: vendorData?.paymentStatus,
+        inventories: dataToSave?.map((item) => {
           const transformed: Record<string, any> = {};
-          extraFieldsForProduct.forEach((field) => {
+          extraFieldsForProduct?.forEach((field) => {
             transformed[field.key] =
               field.type === "date" && item[field.label]
                 ? new Date(item[field.label]).toISOString()

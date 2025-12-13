@@ -164,6 +164,7 @@ import {
   PackagePlus,
   FileBadge2,
   ShoppingCart,
+  ChartNoAxesCombined
 } from "lucide-react"; // ✅ added icons
 
 import { NavMain } from "@/components/nav-main";
@@ -242,6 +243,11 @@ const data = {
       title: "New Purchase",
       url: "/new-purchase",
       icon: ShoppingCart,
+    },
+     {
+      title: "Reports",
+      url: "/reports",
+      icon: ChartNoAxesCombined,
     },
   ],
 };

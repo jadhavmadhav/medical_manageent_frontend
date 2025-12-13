@@ -17,7 +17,7 @@ export const getEnterprise = async (id: string): Promise<any> => {
         secure: true,
       });
     }
-    return request.data || null;
+    return request.data as any || null;
   } catch (error) {
     console.error("Failed to fetch enterprise:", error);
     throw error;

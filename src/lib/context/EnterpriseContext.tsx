@@ -11,9 +11,25 @@ interface Enterprise {
   enterpriseCode: string;
   extraFieldsForProduct: any[];
   billTableForCreateBill: any[];
+  reportConfigurations: reportConfigurationsObj[];
+  enterpriseId: string;
   // Add other fields as per your API response
 }
 
+interface reportConfigurationsObj {
+  key: string;
+  value: boolean;
+  reportLabel: string;
+  configColumns: configColumnsObj[];
+}
+
+interface configColumnsObj {
+  key: string;
+  label: string;
+  value: boolean;
+  required: boolean;
+  position: number | string;
+}
 interface EnterpriseContextType {
   enterprise: Enterprise | undefined;
   isLoading: boolean;
