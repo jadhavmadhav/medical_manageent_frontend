@@ -28,6 +28,11 @@ const DashboardView = ({ enterpriseId }: { enterpriseId: string }) => {
       {/* Stats Overview */}
       <StatsOverview enterpriseId={enterpriseId!} />
 
+      <div className="grid grid-cols-1  gap-6">
+        {/* Sales Chart */}
+        <SalesPerformance enterpriseId={enterpriseId!} />
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Expiring Products */}
         <ExpiringProducts enterpriseId={enterpriseId!} />
@@ -41,11 +46,6 @@ const DashboardView = ({ enterpriseId }: { enterpriseId: string }) => {
         <PendingPatientBills enterpriseId={enterpriseId!} />
         {/* Pending Purchase Bills */}
         <PendingPurchaseBills enterpriseId={enterpriseId!} />
-      </div>
-
-      <div className="grid grid-cols-1  gap-6">
-        {/* Sales Chart */}
-        <SalesPerformance enterpriseId={enterpriseId!} />
       </div>
 
       {/* Charts Section */}

@@ -4,7 +4,7 @@ export interface createDoctorPayload {
   specialization?: string;
   mobile_number: string;
   email?: string;
-  hospital: string;
+  hospital?: string;
   address: string;
 }
 
