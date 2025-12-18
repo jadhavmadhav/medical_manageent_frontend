@@ -219,11 +219,11 @@ const BillItemsTable = ({
 
   return (
     <div className="flex-grow overflow-auto mb-6">
-      <h3 className="text-xl font-bold text-gray-900 mb-4 pt-4 border-t border-gray-100">
+      <h3 className="text-lg font-bold mb-4 pt-4 border-t border-gray-100">
         Bill Items
       </h3>
       {billItems.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border border-dashed border-gray-300 h-40 flex items-center justify-center">
+        <div className="text-center py-12 rounded-lg border border-dashed border-gray-300 h-40 flex items-center justify-center">
           <p className="text-gray-500 text-lg">
             Start by searching and adding a product above 👆
           </p>
@@ -231,12 +231,12 @@ const BillItemsTable = ({
       ) : (
         <div className="overflow-x-auto border rounded-lg">
           <Table>
-            <TableHeader className="bg-gray-100">
+            <TableHeader className="">
               <TableRow>
                 {visibleColumns.map((column) => (
                   <TableHead
                     key={column.key}
-                    className="font-bold text-gray-700"
+                    className="font-bold bg-secondary"
                   >
                     {column.label}
                   </TableHead>
@@ -252,10 +252,10 @@ const BillItemsTable = ({
                       case "item":
                         return (
                           <TableCell key={column.key}>
-                            <div className="font-semibold text-gray-800">
+                            <div className="font-semibold">
                               {item.item}
                             </div>
-                            <div className="text-sm text-blue-600 font-medium">
+                            <div className="text-sm font-medium">
                               {item?.saltComposition}
                             </div>
                           </TableCell>
@@ -272,7 +272,7 @@ const BillItemsTable = ({
                               }
                               className="w-20 text-center"
                             />
-                            <div className="text-xs text-gray-500 mt-1">
+                            <div className="text-xs text-muted-foreground mt-1">
                               Max: {item.availableQuantity}
                             </div>
                           </TableCell>
@@ -280,7 +280,7 @@ const BillItemsTable = ({
 
                       case "sellingPrice":
                         return (
-                          <TableCell key={column.key} className="text-gray-600">
+                          <TableCell key={column.key} className="">
                             ₹{item.sellingPrice.toFixed(2)}
                           </TableCell>
                         );
@@ -303,7 +303,7 @@ const BillItemsTable = ({
                         return (
                           <TableCell
                             key={column.key}
-                            className="font-bold text-lg text-green-700"
+                            className="font-bold"
                           >
                             ₹{item.total.toFixed(2)}
                           </TableCell>

@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/auth-context";
 import ClientProvider from "@/components/client-provider";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "next-themes";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,10 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen`}
       >
-        <ClientProvider>
-          <AuthProvider>{children}</AuthProvider>
-          <Toaster position="top-right" closeButton />
-        </ClientProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ClientProvider>
+            <AuthProvider>{children}</AuthProvider>
+            <Toaster position="top-right" closeButton />
+          </ClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -112,7 +112,7 @@ export default function ReportsView() {
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 50;
+  const ITEMS_PER_PAGE = 20;
 
   // Refs for AbortController
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -298,11 +298,11 @@ export default function ReportsView() {
   }, []);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-2rem)] space-y-4 p-4 md:p-6">
+    <div className="flex flex-col h-full space-y-4 p-4 md:p-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-xl font-bold tracking-tight ">
             Reports Dashboard
           </h1>
           <p className="text-sm text-muted-foreground">
@@ -469,7 +469,7 @@ export default function ReportsView() {
                   {columns.map((col) => (
                     <TableHead
                       key={col.key}
-                      className="whitespace-nowrap bg-gray-50/90 backdrop-blur font-semibold text-gray-700 h-10"
+                      className="whitespace-nowrap bg-secondary backdrop-blur font-semibold h-10"
                     >
                       {col.label}
                     </TableHead>

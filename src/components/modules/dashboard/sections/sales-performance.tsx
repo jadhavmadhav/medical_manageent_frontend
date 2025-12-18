@@ -40,7 +40,7 @@ const SalesPerformance = ({ enterpriseId }: { enterpriseId: string }) => {
     <Card className="shadow-sm">
       <CardHeader>
         <CardTitle>Sales Performance</CardTitle>
-        <CardDescription>Last 7 days sales performance</CardDescription>
+        <CardDescription>Last 15 days sales performance</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={salesChartConfig} className="h-75 w-full">

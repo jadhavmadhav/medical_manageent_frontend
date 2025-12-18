@@ -13,14 +13,14 @@ import InventoryDistribution from "./sections/inventory-distribution";
 
 const DashboardView = ({ enterpriseId }: { enterpriseId: string }) => {
   return (
-    <div className="min-h-screen bg-background p-6 space-y-6">
+    <div className="min-h-screen bg-background p-4 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold"> Dashboard</h1>
+          <h1 className="text-xl font-bold"> Dashboard</h1>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-1">
           <Button>
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-4 w-4 " />
             New Bill
           </Button>
         </div>

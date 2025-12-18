@@ -49,12 +49,12 @@ const MedicineSearch = ({
     <div className="mb-6">
       <Label
         htmlFor="medicine-search"
-        className="block text-sm font-semibold text-gray-900 mb-2"
+        className="block text-sm font-semibold mb-2"
       >
         Add Medicine (Use $\uparrow/\downarrow/Enter$ for quick entry)
       </Label>
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4" />
         <Input
           ref={medicineSearchRef}
           id="medicine-search"
@@ -78,8 +78,8 @@ const MedicineSearch = ({
                 // onMouseEnter={() => setHighlightedIndex(index)} // Better hover UX
                 className={`p-3 cursor-pointer transition-colors flex justify-between items-center ${
                   index === highlightedIndex
-                    ? "bg-blue-600 text-white" // Stronger highlight
-                    : "hover:bg-blue-50 text-gray-900"
+                    ? "bg-primary text-white" // Stronger highlight
+                    : "hover:bg-teal-100 text-gray-900"
                 }`}
               >
                 <div>
@@ -96,9 +96,7 @@ const MedicineSearch = ({
                 <div className="text-right">
                   <div
                     className={`font-bold ${
-                      index === highlightedIndex
-                        ? "text-white"
-                        : "text-blue-600"
+                      index === highlightedIndex ? "text-white" : ""
                     }`}
                   >
                     ₹{product?.sellingPrice}

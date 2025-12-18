@@ -68,7 +68,7 @@ const NewSaleEntryView = ({
   });
 
   const [payment, setPayment] = useState({
-    mode: "cash",
+    mode: "",
     status: "pending",
   });
 
@@ -341,7 +341,7 @@ const NewSaleEntryView = ({
       doctor: selectedDoctor,
       items: billItems,
       status: payment?.status,
-      paymentMethod: payment?.mode,
+      paymentMethod: payment?.status === "paid" ? payment?.mode : "-",
       subtotal,
       totalTax,
       grandTotal,
@@ -397,10 +397,8 @@ const NewSaleEntryView = ({
 
       if (bill_id) {
         updateBill({ ...saleData, _id: bill_id });
-        toast.success("Bill updated successfully.");
       } else {
         createBillMutation(saleData);
-        toast.success("Bill created successfully.");
       }
     } catch (error) {
       console.error("Error completing sale:", error);
@@ -445,7 +443,7 @@ const NewSaleEntryView = ({
 
   return (
     <div className="h-full p-4 flex flex-col">
-      <h1 className="text-3xl font-extrabold text-gray-900">New Sale Entry</h1>
+      <h1 className="text-xl font-extrabold">New Sale Entry</h1>
 
       <Card className="p-0 overflow-hidden w-full mt-6 flex-grow flex flex-col shadow-lg border-2">
         <Instructions
