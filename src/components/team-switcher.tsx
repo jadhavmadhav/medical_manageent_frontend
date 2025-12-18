@@ -1,25 +1,13 @@
 "use client"
 
 import * as React from "react"
-import { ChevronsUpDown, Plus } from "lucide-react"
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import logo from "@/assets/MedTrax.png"
 import {
   SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
+  useSidebar
 } from "@/components/ui/sidebar"
 import Image from "next/image"
-import logo  from "@/assets/MedTrax.png";
 
 export function TeamSwitcher({
   teams,

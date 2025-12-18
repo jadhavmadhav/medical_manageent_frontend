@@ -20,37 +20,6 @@ import { useQuery } from "@tanstack/react-query";
 import { CreditCard } from "lucide-react";
 
 const PendingPatientBills = ({ enterpriseId }: { enterpriseId: string }) => {
-  const pendingPatientPayments = [
-    {
-      id: 1,
-      patient: "Rajesh Kumar",
-      amount: "₹1,245",
-      dueDate: "2025-09-10",
-      status: "overdue",
-    },
-    {
-      id: 2,
-      patient: "Priya Singh",
-      amount: "₹2,587",
-      dueDate: "2025-09-12",
-      status: "due",
-    },
-    {
-      id: 3,
-      patient: "Amit Patel",
-      amount: "₹3,215",
-      dueDate: "2025-09-15",
-      status: "due",
-    },
-    {
-      id: 4,
-      patient: "Sneha Desai",
-      amount: "₹1,850",
-      dueDate: "2025-09-18",
-      status: "due",
-    },
-  ];
-
   const { data } = useQuery({
     queryKey: ["paymentPendingOfPatient", enterpriseId],
     queryFn: () => paymentPendingOfPatient({ enterpriseId }),
@@ -85,8 +54,8 @@ const PendingPatientBills = ({ enterpriseId }: { enterpriseId: string }) => {
                 <TableCell className="font-medium">
                   {payment.patientName || "N/A"}
                 </TableCell>
-                <TableCell className="text-red-500">
-                  {payment.pendingPayment}
+                <TableCell className="text-red-500 font-semibold">
+                  ₹ {payment.pendingPayment}
                 </TableCell>
                 <TableCell>{dateFormatter(payment.dueDate)}</TableCell>
                 <TableCell>
@@ -94,6 +63,11 @@ const PendingPatientBills = ({ enterpriseId }: { enterpriseId: string }) => {
                     variant={
                       payment.status === "overdue" ? "destructive" : "outline"
                     }
+                    className={`${
+                      payment.status === "overdue"
+                        ? "bg-red-100 "
+                        : "bg-orange-100 text-orange-800"
+                    }`}
                   >
                     {payment.status === "overdue" ? "Overdue" : "Due soon"}
                   </Badge>

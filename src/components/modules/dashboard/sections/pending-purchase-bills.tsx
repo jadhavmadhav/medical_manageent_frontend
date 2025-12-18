@@ -73,8 +73,8 @@ const PendingPurchaseBills = ({ enterpriseId }: { enterpriseId: string }) => {
             {data?.map((bill: any) => (
               <TableRow key={bill.id}>
                 <TableCell className="font-medium">{bill.vendorName}</TableCell>
-                <TableCell className="text-red-500">
-                  {bill.pendingAmount}
+                <TableCell className="text-red-500 font-semibold">
+                ₹ {bill.pendingAmount}
                 </TableCell>
                 <TableCell>{bill.companyName}</TableCell>
                 <TableCell>
@@ -82,6 +82,11 @@ const PendingPurchaseBills = ({ enterpriseId }: { enterpriseId: string }) => {
                     variant={
                       bill.status === "overdue" ? "destructive" : "outline"
                     }
+                     className={`${
+                      bill.status === "overdue"
+                        ? "bg-red-100 "
+                        : "bg-orange-100 text-orange-800"
+                    }`}
                   >
                     {bill.status === "overdue" ? "Overdue" : "Due soon"}
                   </Badge>
