@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Plus } from "lucide-react";
+import { Calendar, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import StatsOverview from "./sections/stats-overview";
 import ExpiringProducts from "./sections/expiring-products";
@@ -10,16 +10,35 @@ import PendingPurchaseBills from "./sections/pending-purchase-bills";
 import ProfitTrend from "./sections/profit-trend";
 import SalesPerformance from "./sections/sales-performance";
 import InventoryDistribution from "./sections/inventory-distribution";
+import { useRouter } from "next/navigation";
+ 
 
 const DashboardView = ({ enterpriseId }: { enterpriseId: string }) => {
+ const router= useRouter()
+
+  const currentDate = new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+
+  const handleNewBill = () => { 
+    router.push('/new-sale-entry'); 
+  }
   return (
-    <div className="min-h-screen bg-background p-4 space-y-6">
+    <div className="min-h-screen bg-background  py-3 space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-xl font-bold"> Dashboard</h1>
+          <h1 className="text-2xl font-bold mb-1"> Dashboard</h1>
+          <p className="text-sm text-muted-foreground flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            {currentDate}
+          </p>
         </div>
         <div className="flex items-center space-x-1">
-          <Button>
+          <Button onClick={handleNewBill}>
             <Plus className="h-4 w-4 " />
             New Bill
           </Button>

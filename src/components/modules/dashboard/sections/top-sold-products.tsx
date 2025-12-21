@@ -1,67 +1,4 @@
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import {
-//   Table,
-//   TableBody,
-//   TableCell,
-//   TableHead,
-//   TableHeader,
-//   TableRow,
-// } from "@/components/ui/table";
-// import { topSellingProduct } from "@/services/dashboard";
-// import { numberFormatter } from "@/utils/constants";
-// import { useQuery } from "@tanstack/react-query";
-// import { Package } from "lucide-react";
 
-// const TopSoldProducts = ({ enterpriseId }: { enterpriseId: string }) => {
-//   const { data } = useQuery({
-//     queryKey: ["topSellingProduct", enterpriseId],
-//     queryFn: () => topSellingProduct({ enterpriseId }),
-//     select: (data) => data.data,
-//     enabled: !!enterpriseId,
-//   });
-
-//   console.log("topSellingProduct", data);
-
-//   return (
-//     <Card className="shadow-sm">
-//       <CardHeader>
-//         <CardTitle className="flex items-center">
-//           <Package className="h-5 w-5 mr-2 text-green-500" />
-//           Top Sold Products
-//         </CardTitle>
-//         <CardDescription>Best performing products this month</CardDescription>
-//       </CardHeader>
-//       <CardContent>
-//         <Table>
-//           <TableHeader>
-//             <TableRow>
-//               <TableHead>Product</TableHead>
-//               <TableHead>Units Sold</TableHead>
-//               <TableHead>Revenue</TableHead>
-//             </TableRow>
-//           </TableHeader>
-//           <TableBody>
-//             {data?.map((product: any) => (
-//               <TableRow key={product.id}>
-//                 <TableCell className="font-medium">{product.item}</TableCell>
-//                 <TableCell>{product.totalQuantity}</TableCell>
-//                 <TableCell className="font-semibold text-green-600 ">₹ {numberFormatter(product.totalRevenue)}</TableCell>
-//               </TableRow>
-//             ))}
-//           </TableBody>
-//         </Table>
-//       </CardContent>
-//     </Card>
-//   );
-// };
-
-// export default TopSoldProducts;
 
 
 
@@ -113,7 +50,7 @@ const TopSoldProducts = ({ enterpriseId }: { enterpriseId: string }) => {
   const hasMoreItems = (data?.length || 0) > MAX_VISIBLE_ROWS;
 
   const renderTableRow = (product: any, index?: number) => (
-    <TableRow key={product.id}>
+    <TableRow key={product._id ?? `${product.item} - ${index}`}>
       {index !== undefined && (
         <TableCell className="font-bold text-gray-500">
           #{index + 1}
@@ -169,7 +106,7 @@ const TopSoldProducts = ({ enterpriseId }: { enterpriseId: string }) => {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  visibleData.map((product: any) => renderTableRow(product))
+                  visibleData.map((product: any, index: number) => renderTableRow(product, index))
                 )}
               </TableBody>
             </Table>
@@ -196,7 +133,7 @@ const TopSoldProducts = ({ enterpriseId }: { enterpriseId: string }) => {
                     </DialogDescription>
                   </DialogHeader>
                   <div className="mt-4 max-h-[60vh] overflow-y-auto">
-                    <Table>
+                    <Table accessKey="">
                       <TableHeader className="sticky top-0 z-10">
                         <TableRow>
                           <TableHead className="w-16 font-semibold">Rank</TableHead>
@@ -207,7 +144,7 @@ const TopSoldProducts = ({ enterpriseId }: { enterpriseId: string }) => {
                       </TableHeader>
                       <TableBody>
                         {data?.map((product: any, index: number) =>
-                          renderTableRow(product)
+                          renderTableRow(product,index)
                         )}
                       </TableBody>
                     </Table>

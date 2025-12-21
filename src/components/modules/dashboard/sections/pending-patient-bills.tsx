@@ -17,7 +17,7 @@ import {
 import { paymentPendingOfPatient } from "@/services/dashboard";
 import { dateFormatter } from "@/utils/constants";
 import { useQuery } from "@tanstack/react-query";
-import { CreditCard } from "lucide-react";
+import { AlertCircle, Clock, CreditCard } from "lucide-react";
 
 const PendingPatientBills = ({ enterpriseId }: { enterpriseId: string }) => {
   const { data } = useQuery({
@@ -49,31 +49,42 @@ const PendingPatientBills = ({ enterpriseId }: { enterpriseId: string }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.map((payment: any) => (
-              <TableRow key={payment.id}>
-                <TableCell className="font-medium">
-                  {payment.patientName || "N/A"}
-                </TableCell>
-                <TableCell className="text-red-500 font-semibold">
-                  ₹ {payment.pendingPayment}
-                </TableCell>
-                <TableCell>{dateFormatter(payment.dueDate)}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={
-                      payment.status === "overdue" ? "destructive" : "outline"
-                    }
-                    className={`${
-                      payment.status === "overdue"
-                        ? "bg-red-100 "
-                        : "bg-orange-100 text-orange-800"
-                    }`}
-                  >
-                    {payment.status === "overdue" ? "Overdue" : "Due soon"}
-                  </Badge>
-                </TableCell>
-              </TableRow>
-            ))}
+            {data?.map((payment: any, index: number) => {
+              const isOverdue = new Date(payment.dueDate) < new Date();
+              return (
+                <TableRow key={index}>
+                  <TableCell className="font-medium">
+                    {payment.patientName || "N/A"}
+                  </TableCell>
+                  <TableCell className="text-red-500 font-semibold">
+                    ₹ {payment.pendingPayment}
+                  </TableCell>
+                  <TableCell>{dateFormatter(payment.dueDate)}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={isOverdue ? "destructive" : "outline"}
+                      className={`${isOverdue
+                          ? "bg-red-100   border-red-200"
+                          : "bg-orange-100 text-orange-800  border-orange-200"
+                        } font-medium`}
+                    >
+                      {isOverdue ? (
+                        <>
+                          <AlertCircle className="h-3 w-3 mr-1" />
+                          Overdue
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="h-3 w-3 mr-1" />
+                          Due Soon
+                        </>
+                      )}
+                    </Badge>
+
+                  </TableCell>
+                </TableRow>
+              )
+            })}
           </TableBody>
         </Table>
       </CardContent>

@@ -37,6 +37,7 @@ import type {
 } from "../../../types/new-sale-entry";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Calendar } from "@/components/ui/calendar";
 
 const NewSaleEntryView = ({
   enterpriseId,
@@ -52,6 +53,11 @@ const NewSaleEntryView = ({
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [billItems, setBillItems] = useState<any[]>([]);
+  const [billDate, setBillDate] = useState<Date>(new Date());
+  const [dueDate, setDueDate] = useState<Date | null>(null);
+  const [isWalletPatient, setIsWalletPatient] = useState<boolean>(false);
+
+
 
   // Search state
   const [searchTerm, setSearchTerm] = useState("");
@@ -81,10 +87,7 @@ const NewSaleEntryView = ({
     (data: any) => data?.result || [],
     []
   );
-  const selectDoctorsOrEmpty = useCallback(
-    (data: any) => data?.doctors || [],
-    []
-  );
+
   const selectBillData = useCallback((data: any) => data?.result, []);
 
   // Queries
@@ -95,62 +98,57 @@ const NewSaleEntryView = ({
     select: selectResultOrEmpty, // Using stable selector
   });
 
-  const { data: patients = [] } = useQuery({
-    queryKey: ["patients", enterpriseId],
-    queryFn: () => searchPatients({ enterpriseId }),
-    enabled: !!enterpriseId,
-    select: selectResultOrEmpty, // Using stable selector
-  });
-
-  const { data: doctors = [] } = useQuery({
-    queryKey: ["doctors", enterpriseId],
-    queryFn: () => searchDoctors({ enterpriseId }),
-    enabled: !!enterpriseId,
-    select: selectDoctorsOrEmpty, // Using stable selector
-  });
-
   const { data: billData } = useQuery<{ result: any }>({
     queryKey: ["billData", bill_id],
     queryFn: () => getBillById(bill_id!),
     select: selectBillData,
-    enabled: !!bill_id,
+    enabled: Boolean(bill_id),
   });
 
   // FIX 3: Guard against unnecessary updates
   useEffect(() => {
     if (billData) {
-      const { doctor, patient, items, paymentMethod, status } = billData as any;
+      console.log("billData", billData);
+      const { doctor, patient, items, paymentMethod, status, date, dueDate } =
+        billData as any;
 
       // Only update if we haven't loaded items yet or if strictly needed
       // Ideally, check if IDs match, but for now, this prevents basic race conditions
-      if (billItems.length === 0 && !selectedPatient) {
-        setSelectedDoctor(doctor);
-        setSelectedPatient(patient);
-        setBillItems(items);
-        setPayment({
-          mode: paymentMethod,
-          status,
-        });
-      }
+
+      setSelectedDoctor(doctor);
+      setSelectedPatient(patient);
+      setBillItems(items);
+      setBillDate(new Date(date));
+      setDueDate(dueDate ? new Date(dueDate) : null);
+      setPayment({
+        mode: paymentMethod,
+        status,
+      });
     }
   }, [billData]); // Removing billItems/selectedPatient from dep array to avoid loops, purely sync from server
 
   useEffect(() => {
-    if (!selectedPatient && patients?.length) {
-      const defaultPatient = patients.find(
-        (p: Patient) => p?.name === "Walk-in Customer"
-      );
-      if (defaultPatient) {
-        setSelectedPatient(defaultPatient);
-      }
+    if (!selectedPatient) {
+      const defaultPatient = {
+        _id: "68b43d9bf7e9f8c0895400be",
+        enterpriseId: "6700d404515345c548d3df49",
+        name: "Walk-in Customer",
+        mobile_number: "XXXXXXXXXXX",
+        address: "Walk-in Customer Address",
+      };
+
+      setSelectedPatient(defaultPatient as any);
+      setIsWalletPatient(true);
+      setPayment({ ...payment, status: "paid" });
+
     }
-  }, [patients, selectedPatient]);
+
+  }, [selectedPatient]);
 
   // Mutations
   const { mutate: createDoctorMutation } = useMutation({
     mutationFn: createDoctor,
     onSuccess: (newDoctor: any) => {
-      queryClient.invalidateQueries({ queryKey: ["doctors", enterpriseId] });
       setSelectedDoctor(newDoctor?.doctor ?? null);
       setModals((m) => ({ ...m, newDoctor: false }));
     },
@@ -161,7 +159,6 @@ const NewSaleEntryView = ({
     mutationFn: createPatient,
     onSuccess: (data: any) => {
       const newPatientResponse = data?.result;
-      queryClient.invalidateQueries({ queryKey: ["patients", enterpriseId] });
       setSelectedPatient(newPatientResponse);
       setModals((m) => ({ ...m, newPatient: false }));
       console.log("Patient created and selected:", newPatientResponse);
@@ -289,11 +286,11 @@ const NewSaleEntryView = ({
         items.map((i: any) =>
           i._id === productId
             ? {
-                ...i,
-                quantity: Number(newQty),
-                // Ensure total calculation is correct
-                total: Number(newQty) * (i.sellingPrice - i.discount),
-              }
+              ...i,
+              quantity: Number(newQty),
+              // Ensure total calculation is correct
+              total: Number(newQty) * (i.sellingPrice - i.discount),
+            }
             : i
         )
       );
@@ -308,11 +305,11 @@ const NewSaleEntryView = ({
         items?.map((i: any) =>
           i._id === productId
             ? {
-                ...i,
-                discount: Number(newDiscount),
-                // Ensure total calculation is correct
-                total: i.quantity * (i.sellingPrice - Number(newDiscount)),
-              }
+              ...i,
+              discount: Number(newDiscount),
+              // Ensure total calculation is correct
+              total: i.quantity * (i.sellingPrice - Number(newDiscount)),
+            }
             : i
         )
       );
@@ -345,7 +342,8 @@ const NewSaleEntryView = ({
       subtotal,
       totalTax,
       grandTotal,
-      date: new Date(),
+      date: billDate,
+      dueDate: payment?.status === "pending" ? dueDate : null,
     }),
     [
       enterpriseId,
@@ -355,6 +353,8 @@ const NewSaleEntryView = ({
       subtotal,
       totalTax,
       grandTotal,
+      billDate,
+      dueDate,
     ]
   );
 
@@ -389,7 +389,7 @@ const NewSaleEntryView = ({
 
     try {
       const saleData = collectSaleData(selectedPatient);
-
+      console.log("saleData", saleData);
       if (!saleData) {
         toast.error("Something went wrong while preparing the bill.");
         return;
@@ -454,62 +454,76 @@ const NewSaleEntryView = ({
         <div className="flex flex-col md:flex-row flex-grow">
           {/* Left panel */}
           <div className="flex-1 p-6 border-r flex flex-col">
-            {/* Patient & Doctor Selection Area - Refined UI */}
-            <div className="flex flex-wrap gap-4 mb-6 pb-4 border-b">
-              {/* Patient Selection */}
-              <div
-                className={`flex items-center gap-3 p-3  rounded-lg border ${
-                  patientAndDoctorInfo && !selectedPatient
+            <div className="pb-4 border-b flex justify-between">
+              {/* Patient & Doctor Selection Area - Refined UI */}
+              <div className="flex flex-wrap gap-4 mb-6 ">
+                {/* Patient Selection */}
+                <div
+                  className={`flex items-center gap-3 p-3  rounded-lg border ${patientAndDoctorInfo && !selectedPatient
                     ? "border-red-400 bg-red-50"
                     : "border-blue-200 bg-blue-50"
-                } min-w-[200px]`}
-              >
-                <User className="h-5 w-5 text-blue-600" />
-                <div className="flex flex-col">
-                  {selectedPatient ? (
-                    <p className="text-blue-800 font-semibold truncate max-w-[150px]">
-                      {selectedPatient.name}
-                    </p>
-                  ) : (
-                    <p className="text-gray-500 italic">No Patient Selected</p>
-                  )}
-                  <Button
-                    onClick={() => setModals((m) => ({ ...m, patient: true }))}
-                    variant="link"
-                    size="sm"
-                    className="p-0 h-auto text-blue-600 hover:text-blue-800 justify-start"
-                  >
-                    {selectedPatient ? "Change Patient" : "Select Patient"}
-                  </Button>
+                    } min-w-[200px]`}
+                >
+                  <User className="h-5 w-5 text-blue-600" />
+                  <div className="flex flex-col">
+                    {selectedPatient ? (
+                      <p className="text-blue-800 font-semibold truncate max-w-[150px]">
+                        {selectedPatient.name}
+                      </p>
+                    ) : (
+                      <p className="text-gray-500 italic">
+                        No Patient Selected
+                      </p>
+                    )}
+                    <Button
+                      onClick={() =>
+                        setModals((m) => ({ ...m, patient: true }))
+                      }
+                      variant="link"
+                      size="sm"
+                      className="p-0 h-auto text-blue-600 hover:text-blue-800 justify-start"
+                    >
+                      {selectedPatient ? "Change Patient" : "Select Patient"}
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Doctor Selection */}
+                <div
+                  className={`flex items-center gap-3 p-3  rounded-lg border ${patientAndDoctorInfo && !selectedDoctor
+                    ? "border-red-400 bg-red-50"
+                    : "bg-green-50 rounded-lg border border-green-200 "
+                    } min-w-[200px]`}
+                >
+                  <Stethoscope className="h-5 w-5 text-green-600" />
+                  <div className="flex flex-col">
+                    {selectedDoctor ? (
+                      <p className="text-green-800 font-semibold truncate max-w-[150px]">
+                        {selectedDoctor.name}
+                      </p>
+                    ) : (
+                      <p className="text-gray-500 italic">No Doctor Selected</p>
+                    )}
+                    <Button
+                      onClick={() => setModals((m) => ({ ...m, doctor: true }))}
+                      variant="link"
+                      size="sm"
+                      className="p-0 h-auto text-green-600 hover:text-green-800 justify-start"
+                    >
+                      {selectedDoctor ? "Change Doctor" : "Select Doctor"}
+                    </Button>
+                  </div>
                 </div>
               </div>
 
-              {/* Doctor Selection */}
-              <div
-                className={`flex items-center gap-3 p-3  rounded-lg border ${
-                  patientAndDoctorInfo && !selectedDoctor
-                    ? "border-red-400 bg-red-50"
-                    : "bg-green-50 rounded-lg border border-green-200 "
-                } min-w-[200px]`}
-              >
-                <Stethoscope className="h-5 w-5 text-green-600" />
-                <div className="flex flex-col">
-                  {selectedDoctor ? (
-                    <p className="text-green-800 font-semibold truncate max-w-[150px]">
-                      {selectedDoctor.name}
-                    </p>
-                  ) : (
-                    <p className="text-gray-500 italic">No Doctor Selected</p>
-                  )}
-                  <Button
-                    onClick={() => setModals((m) => ({ ...m, doctor: true }))}
-                    variant="link"
-                    size="sm"
-                    className="p-0 h-auto text-green-600 hover:text-green-800 justify-start"
-                  >
-                    {selectedDoctor ? "Change Doctor" : "Select Doctor"}
-                  </Button>
-                </div>
+              <div className="flex gap-1 items-start">
+                <span>Bill Date:</span>
+                <input
+                  type="date"
+                  className="border border-primary rounded px-2 py-1 text-sm bg-secondary"
+                  value={billDate ? billDate.toISOString().slice(0, 10) : ""}
+                  onChange={(e) => setBillDate(new Date(e.target.value))}
+                />
               </div>
             </div>
             {/* End Patient & Doctor Selection Area */}
@@ -539,8 +553,8 @@ const NewSaleEntryView = ({
               bill_id
                 ? "Update Bill"
                 : isUpdating || isPending
-                ? "Processing..."
-                : "Create New Entry"
+                  ? "Processing..."
+                  : "Create New Entry"
             }
             subtotal={subtotal}
             totalTax={totalTax}
@@ -551,6 +565,9 @@ const NewSaleEntryView = ({
             setPaymentMode={(m) => setPayment((p) => ({ ...p, mode: m }))}
             resetForm={resetForm}
             completeSale={handleCompleteSale}
+            dueDate={dueDate}
+            setDueDate={setDueDate} 
+            isWalletPatient={isWalletPatient}
           />
         </div>
       </Card>
@@ -559,9 +576,9 @@ const NewSaleEntryView = ({
       <PatientSelectionModal
         patientModalOpen={modals?.patient}
         setPatientModalOpen={(v) => setModals((m) => ({ ...m, patient: v }))}
-        patients={patients}
         selectedPatient={selectedPatient}
         setSelectedPatient={setSelectedPatient}
+        enterpriseId={enterpriseId}
         setNewPatientModalOpen={(v) =>
           setModals((m) => ({ ...m, newPatient: v }))
         }
@@ -570,9 +587,9 @@ const NewSaleEntryView = ({
       <DoctorSelectionModal
         doctorModalOpen={modals?.doctor}
         setDoctorModalOpen={(v) => setModals((m) => ({ ...m, doctor: v }))}
-        doctors={doctors}
         selectedDoctor={selectedDoctor}
         setSelectedDoctor={setSelectedDoctor}
+        enterpriseId={enterpriseId}
         setNewDoctorModalOpen={(v) =>
           setModals((m) => ({ ...m, newDoctor: v }))
         }

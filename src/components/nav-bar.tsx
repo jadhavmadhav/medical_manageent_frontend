@@ -19,13 +19,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"; 
 import { ThemeToggle } from "./theme-toggle";
+import { useAuth } from "@/context/auth-context";
 
 export const NavBar = () => {
   const [search, setSearch] = useState("");
+  const { logout } = useAuth();
   const notificationCount = 3;
 
   const handleLogout = () => {
-    console.log("Logout clicked");
+    logout()
   };
 
   return (

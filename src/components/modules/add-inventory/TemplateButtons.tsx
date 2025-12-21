@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
@@ -12,27 +12,20 @@ interface TemplateButtonsProps {
 const TemplateButtons = ({ extraFieldsForProduct }: TemplateButtonsProps) => {
   const downloadTemplate = (type: "excel" | "csv") => {
     try {
-      const headers = extraFieldsForProduct.map((field: any) => ({
-        label: field.label,
-        required: field.required
-      }));
+      const headers = extraFieldsForProduct.map((field: any) => field.label);
 
       // Create workbook
       const workbook = XLSX.utils.book_new();
-      
-      // Create worksheet with headers
-      const worksheet = XLSX.utils.json_to_sheet(
-        [headers.reduce((acc: any, header) => {
-          acc[header.label] = header.required ? `REQUIRED: ${header.label}` : header.label;
-          return acc;
-        }, {})],
-        { header: headers.map(h => h.label) }
-      );
+
+      // ONLY header row (no second row)
+      const worksheet = XLSX.utils.aoa_to_sheet([headers]);
 
       XLSX.utils.book_append_sheet(workbook, worksheet, "Template");
 
       // Generate file
-      const fileName = `medical_inventory_template.${type === "excel" ? "xlsx" : "csv"}`;
+      const fileName = `medical_inventory_template.${
+        type === "excel" ? "xlsx" : "csv"
+      }`;
       XLSX.writeFile(workbook, fileName);
 
       toast.success(`Downloaded ${fileName}`);

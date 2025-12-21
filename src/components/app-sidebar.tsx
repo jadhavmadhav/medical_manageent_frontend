@@ -120,7 +120,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* BRAND NAME */}
         <div className="min-w-0 flex-1">
           <span className="block text-xl font-bold  truncate">
-            MedTrax ldkfk kflkf fff fffffffffff ffffff ffff
+            MedTrax
           </span>
         </div>
       </SidebarHeader>
@@ -129,9 +129,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={data.navMain} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
+       <SidebarFooter className="text-center gap-0">
+        <div className="text-muted-foreground  ">
+          Powered by MedTrax
+        </div>
+        <div  className="text-xs text-muted-foreground">
+          Version 1.0.0
+        </div>
+        {/* <NavUser user={data.user} /> */}
+      </SidebarFooter> 
       <SidebarRail />
     </Sidebar>
   );

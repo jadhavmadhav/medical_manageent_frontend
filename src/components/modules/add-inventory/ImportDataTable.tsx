@@ -116,7 +116,7 @@ const handleFileUpload = async (file: File, type: "excel" | "csv") => {
       {requiredFields.length > 0 && (
         <Alert className="mb-4">
           <Info className="h-4 w-4" />
-          <AlertDescription className="text-gray-700">
+          <AlertDescription className="">
             Required Fields: {requiredFields.join(", ")}
           </AlertDescription>
         </Alert>

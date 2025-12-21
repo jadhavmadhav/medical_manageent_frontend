@@ -197,15 +197,10 @@ export function ViewBill({ bill }: ViewBillProps) {
 
       {/* Custom Wide Dialog */}
       <AlertDialogContent
-        className="
-          w-[600px] min-w-[60vw] max-w-[800px]
-          p-6 rounded-2xl shadow-2xl
-          bg-white border
-        "
-      >
+        className="w-[600px] min-w-[60vw] max-w-[800px] p-6 rounded-2xl shadow-2xl border "   >
         {/* Header */}
         <AlertDialogHeader className="border-b pb-3">
-          <AlertDialogTitle className="flex justify-between items-center text-xl font-semibold text-gray-800">
+          <AlertDialogTitle className="flex justify-between items-center text-xl font-semibold">
             <div className="flex items-center gap-2">
               <span>Bill #{bill?.invoiceNo || "-"}</span>
               {isReturnBill && (
@@ -222,7 +217,7 @@ export function ViewBill({ bill }: ViewBillProps) {
         </AlertDialogHeader>
 
         {/* Bill Items */}
-        <div className="mt-4 border rounded-lg overflow-hidden bg-gray-50">
+        <div className="mt-4 border rounded-lg overflow-hidden ">
           {billItems.length > 0 ? (
             <div className="max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300">
               <table className="w-full text-sm">

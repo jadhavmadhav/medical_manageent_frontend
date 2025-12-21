@@ -14,7 +14,10 @@ export const dateFormatter = (date: any) => {
 };
 
 export function numberFormatter(number: number) {
-  return number.toLocaleString("en-IN");
+  return number.toLocaleString("en-IN", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export function getStatusBadge(status?: string) {

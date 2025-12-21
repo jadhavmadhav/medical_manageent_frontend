@@ -16,7 +16,7 @@ export interface inventories {
   saleQuantity: number;
   status: string;
   expiryDate: string;
-  batchNumber?: string;
+  batchNo?: string;
   vendorId: string;
   billNumber: string;
   gstPercent: number;
@@ -34,6 +34,10 @@ export const columns: ColumnDef<inventories>[] = [
     header: "Item Name",
   },
   {
+    accessorKey: "manufacturer",
+    header: "Manufacturer	",
+  },
+  {
     accessorKey: "quantity",
     header: "Quantity",
   },
@@ -48,19 +52,54 @@ export const columns: ColumnDef<inventories>[] = [
       renderStockProgress(row.original.quantity, row.original.saleQuantity),
   },
   {
-    accessorKey: "batchNumber",
+    accessorKey: "batchNo",
     header: "Batch Number",
   },
 
   {
     accessorKey: "buyingPrice",
     header: "Buying Price",
-    cell: ({ getValue }) => numberFormatter(Number(getValue()) || 0),
+    cell: (params: any) => {
+      const buyingPrice = params.getValue()
+      const sellingPrice = params.row.original.sellingPrice
+      if (Number(sellingPrice) < Number(buyingPrice)) {
+        return (
+          <div className="text-red-600 font-medium">
+            {numberFormatter(Number(buyingPrice) || 0)}
+          </div>
+        )
+      }
+      return (
+        <div>
+          {numberFormatter(Number(sellingPrice) || 0)}
+        </div>
+      )
+    },
   },
   {
     accessorKey: "sellingPrice",
     header: "Selling Price",
-    cell: ({ getValue }) => numberFormatter(Number(getValue()) || 0),
+    cell: (params: any) => {
+      const sellingPrice = params.getValue()
+      const buyingPrice = params.row.original.buyingPrice
+      if (Number(sellingPrice) < Number(buyingPrice)) {
+        return (
+          <div className="text-red-600 font-medium">
+            {numberFormatter(Number(sellingPrice) || 0)}
+          </div>
+        )
+      }
+      return (
+        <div>
+          {numberFormatter(Number(sellingPrice) || 0)}
+        </div>
+      )
+    },
+  },
+  {
+    accessorKey: "manufactureDate",
+    header: "Manufacture Date",
+    cell: ({ getValue }) => dateFormatter(getValue()),
   },
   {
     accessorKey: "expiryDate",
@@ -93,10 +132,7 @@ export const columns: ColumnDef<inventories>[] = [
     accessorKey: "gstPercent",
     header: "GST (%)",
   },
-  {
-    accessorKey: "vendorId",
-    header: "Vendor ID",
-  },
+
   {
     accessorKey: "locker",
     header: "Locker",

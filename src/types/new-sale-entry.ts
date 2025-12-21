@@ -83,8 +83,9 @@ export interface Product {
   availableQuantity: number;
   schedule?: string;
   locker?: string;
-  batchNumber?: string;
+  batchNo?: string;
   highlightedIndex?: any;
+  manufacturer?: string;
 }
 
 export interface BillItem {
@@ -106,4 +107,5 @@ export interface SaleData {
   grandTotal: number;
   billNumber?: string;
   date: any;
+  dueDate?:Date | null;
 }

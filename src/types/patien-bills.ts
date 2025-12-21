@@ -1,7 +1,7 @@
 export interface ReturnBillItemPayload {
   _id: string;
   availableQuantity: number;
-  batchNumber: string;
+  batchNo: string;
   billId: string;
   billNumber: string;
   buyingDate: string;

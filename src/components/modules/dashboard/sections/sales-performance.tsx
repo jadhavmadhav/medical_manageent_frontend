@@ -25,7 +25,7 @@ const SalesPerformance = ({ enterpriseId }: { enterpriseId: string }) => {
   const salesChartConfig = {
     sales: {
       label: "Sales",
-      color: "hsl(var(--chart-1))",
+      color: "var(--chart-2)",
     },
   };
 

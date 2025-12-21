@@ -23,17 +23,11 @@ import {
 } from "recharts";
 
 const ProfitTrend = ({ enterpriseId }: { enterpriseId: string }) => {
-  const profitData = [
-    { month: "Apr", profit: 15000 },
-    { month: "May", profit: 18000 },
-    { month: "Jun", profit: 12000 },
-    { month: "Jul", profit: 20000 },
-    { month: "Aug", profit: 22000 },
-  ];
+ 
   const profitChartConfig = {
     profit: {
       label: "Profit",
-      color: "hsl(var(--chart-3))",
+      color: "var(--chart-3)",
     },
   };
 

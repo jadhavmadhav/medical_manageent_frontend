@@ -193,6 +193,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { numberFormatter } from "@/utils/constants";
 
 interface BillItemsTableProps {
   billItems: BillItem[];
@@ -245,7 +246,7 @@ const BillItemsTable = ({
             </TableHeader>
             <TableBody>
               {billItems.map((item, index) => (
-                <TableRow key={index} className="hover:bg-blue-50/50">
+                <TableRow key={index}>
                   {visibleColumns.map((column) => {
                     // Render each cell based on the column key
                     switch (column.key) {
@@ -281,7 +282,7 @@ const BillItemsTable = ({
                       case "sellingPrice":
                         return (
                           <TableCell key={column.key} className="">
-                            ₹{item.sellingPrice.toFixed(2)}
+                            ₹{numberFormatter(item.sellingPrice)}
                           </TableCell>
                         );
 
@@ -305,7 +306,7 @@ const BillItemsTable = ({
                             key={column.key}
                             className="font-bold"
                           >
-                            ₹{item.total.toFixed(2)}
+                            ₹{numberFormatter(item.total)}
                           </TableCell>
                         );
 
