@@ -1,4 +1,4 @@
-  "use client";
+"use client";
 
 import { useState } from "react";
 import {
@@ -17,18 +17,29 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"; 
+} from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from "./theme-toggle";
 import { useAuth } from "@/context/auth-context";
+import { useRouter } from "next/navigation";
+import { Button } from "./ui/button";
 
 export const NavBar = () => {
   const [search, setSearch] = useState("");
   const { logout } = useAuth();
+  const router = useRouter()
   const notificationCount = 3;
 
   const handleLogout = () => {
     logout()
   };
+
+  const handleProfile = () => {
+    router.push('/profile')
+  }
+
+  const handleViewNotification = () => {
+    router.push('/notification')
+  }
 
   return (
     <div className="flex items-center justify-end flex-1 gap-10">
@@ -46,7 +57,9 @@ export const NavBar = () => {
       {/* 👉 Right Section */}
       <div className="flex items-center gap-3">
         {/* 🌗 Dark Mode Toggle */}
-        <ThemeToggle />
+        <Button variant="outline" size="icon">
+          <ThemeToggle />
+        </Button>
 
         {/* 🔔 Notifications */}
         <DropdownMenu>
@@ -68,7 +81,7 @@ export const NavBar = () => {
 
             <DropdownMenuSeparator />
 
-            <DropdownMenuItem className="text-center text-sm text-muted-foreground">
+            <DropdownMenuItem className="text-center text-sm text-muted-foreground" onClick={handleViewNotification}>
               View all notifications
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -81,7 +94,7 @@ export const NavBar = () => {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end" className="w-48">
-            <DropdownMenuItem className="gap-2">
+            <DropdownMenuItem className="gap-2" onClick={handleProfile}>
               <User className="h-4 w-4" />
               Profile
             </DropdownMenuItem>
@@ -94,7 +107,7 @@ export const NavBar = () => {
             <DropdownMenuSeparator />
 
             <DropdownMenuItem
-              className="gap-2 text-red-600 focus:text-red-600"
+              className="gap-2 font-semibold text-red-500 focus:text-red-500"
               onClick={handleLogout}
             >
               <LogOut className="h-4 w-4" />

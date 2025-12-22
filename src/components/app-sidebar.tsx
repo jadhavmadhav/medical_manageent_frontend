@@ -27,7 +27,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
-import logo from "@/assets/MedTraxLogo.png";
+import logo from "@/assets/med.jpeg";
 
 const data = {
   user: {
@@ -119,25 +119,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         {/* BRAND NAME */}
         <div className="min-w-0 flex-1">
-          <span className="block text-xl font-bold  truncate">
-            MedTrax
+          <span className="block text-xl font-bold  truncate capitalize">
+            Grantha Medical
           </span>
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="mt-5">
         <NavMain items={data.navMain} />
         {/* <NavProjects projects={data.projects} /> */}
       </SidebarContent>
-       <SidebarFooter className="text-center gap-0">
+      <SidebarFooter className="text-center gap-0">
         <div className="text-muted-foreground  ">
           Powered by MedTrax
         </div>
-        <div  className="text-xs text-muted-foreground">
+        <div className="text-xs text-muted-foreground">
           Version 1.0.0
         </div>
         {/* <NavUser user={data.user} /> */}
-      </SidebarFooter> 
+      </SidebarFooter>
       <SidebarRail />
     </Sidebar>
   );

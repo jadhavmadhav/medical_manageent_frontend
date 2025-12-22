@@ -124,7 +124,7 @@ const NewSaleEntryView = ({
         mode: paymentMethod,
         status,
       });
-    }
+    } 
   }, [billData]); // Removing billItems/selectedPatient from dep array to avoid loops, purely sync from server
 
   useEffect(() => {
