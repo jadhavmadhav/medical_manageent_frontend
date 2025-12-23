@@ -126,3 +126,10 @@ export const getPaymentMethodIcon = (method: string) => {
   // Default icon for 'Other' or unknown methods
   return <Globe className={iconClass} />;
 };
+
+
+export const slugify = (text: string) =>
+  text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_|_$/g, "");

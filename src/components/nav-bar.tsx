@@ -541,6 +541,10 @@ export const NavBar = () => {
     router.push("/notification");
   };
 
+  const handleSettings = () => {
+    router.push("/setting")
+  }
+
   const clearSearch = () => {
     setSearch("");
   };
@@ -711,7 +715,7 @@ export const NavBar = () => {
                 <span>My Profile</span>
               </DropdownMenuItem>
 
-              <DropdownMenuItem className="gap-3 p-3 cursor-pointer rounded-md">
+              <DropdownMenuItem className="gap-3 p-3 cursor-pointer rounded-md" onClick={handleSettings}>
                 <div className="p-1.5 bg-purple-50 rounded-md">
                   <Settings className="h-4 w-4 text-purple-600" />
                 </div>

@@ -124,7 +124,7 @@ const NewSaleEntryView = ({
         mode: paymentMethod,
         status,
       });
-    } 
+    }
   }, [billData]); // Removing billItems/selectedPatient from dep array to avoid loops, purely sync from server
 
   useEffect(() => {
@@ -141,6 +141,8 @@ const NewSaleEntryView = ({
       setIsWalletPatient(true);
       setPayment({ ...payment, status: "paid" });
 
+    } else {
+      setIsWalletPatient(false);
     }
 
   }, [selectedPatient]);
@@ -327,7 +329,11 @@ const NewSaleEntryView = ({
     setSelectedPatient(null);
     setSelectedDoctor(null);
     setBillItems([]);
-    setPayment({ mode: "cash", status: "pending" });
+    setPayment({ mode: "", status: "pending" });
+    setBillDate(new Date());
+    setDueDate(null);
+    setSearchTerm("");
+    setHighlightedIndex(-1);
     medicineSearchRef.current?.focus();
   }, []);
 
@@ -566,7 +572,7 @@ const NewSaleEntryView = ({
             resetForm={resetForm}
             completeSale={handleCompleteSale}
             dueDate={dueDate}
-            setDueDate={setDueDate} 
+            setDueDate={setDueDate}
             isWalletPatient={isWalletPatient}
           />
         </div>
