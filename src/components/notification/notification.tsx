@@ -22,22 +22,28 @@ import {
   UserCheck,
   PackageCheck,
   Calendar,
-  MoreVertical,
+  Pill,
+  Activity,
+  FileText,
+  Truck,
   ArrowUpRight,
   ArrowDownRight,
+  Thermometer,
+  AlertTriangle,
+  CheckCircle,
 } from "lucide-react";
 
-// Enhanced notification data with more types
+// Medical store notification data
 const notificationsData = [
   {
     id: 1,
     category: "payment",
     type: "customer_payment",
     title: "Payment Received",
-    message: "Ramesh Kumar paid ₹15,000 for Invoice #INV-2024-001",
-    amount: "₹15,000",
+    message: "Dr. Sharma paid ₹3,500 for Invoice #INV-2024-1234",
+    amount: "₹3,500",
     amountType: "credit",
-    customer: "Ramesh Kumar",
+    customer: "Dr. Sharma",
     time: "2 minutes ago",
     read: false,
     priority: "high",
@@ -46,30 +52,43 @@ const notificationsData = [
   },
   {
     id: 2,
-    category: "payment",
-    type: "supplier_payment",
-    title: "Supplier Payment Due",
-    message: "Payment of ₹45,000 due to Mahalaxmi Seeds & Fertilizers",
-    amount: "₹45,000",
-    amountType: "debit",
-    supplier: "Mahalaxmi Seeds",
-    dueDate: "Tomorrow",
+    category: "stock",
+    type: "low_stock",
+    title: "Low Stock Alert",
+    message: "Paracetamol 500mg - Only 50 tablets remaining",
+    product: "Paracetamol 500mg",
+    quantity: "50 tablets",
+    threshold: "100 tablets",
     time: "15 minutes ago",
     read: false,
     priority: "high",
-    icon: CreditCard,
-    color: "red",
+    icon: TrendingDown,
+    color: "amber",
   },
   {
     id: 3,
+    category: "stock",
+    type: "expiry_alert",
+    title: "Medicine Expiry Alert",
+    message: "8 medicines expiring within 30 days. Review stock immediately.",
+    expiringItems: "8 medicines",
+    expiryDate: "30 days",
+    time: "30 minutes ago",
+    read: false,
+    priority: "critical",
+    icon: Calendar,
+    color: "red",
+  },
+  {
+    id: 4,
     category: "pending",
     type: "customer_pending",
-    title: "Pending Payment Alert",
-    message: "Suresh Patil has ₹8,500 pending payment overdue by 5 days",
-    amount: "₹8,500",
+    title: "Pending Payment",
+    message: "City Hospital has ₹25,000 pending for last month's supplies",
+    amount: "₹25,000",
     amountType: "pending",
-    customer: "Suresh Patil",
-    overdueBy: "5 days",
+    customer: "City Hospital",
+    overdueBy: "7 days",
     time: "1 hour ago",
     read: false,
     priority: "medium",
@@ -77,27 +96,27 @@ const notificationsData = [
     color: "orange",
   },
   {
-    id: 4,
-    category: "stock",
-    type: "low_stock",
-    title: "Low Stock Alert",
-    message: "Urea Fertilizer (50kg) - Only 8 bags remaining",
-    product: "Urea Fertilizer 50kg",
-    quantity: "8 bags",
-    threshold: "10 bags",
+    id: 5,
+    category: "purchase",
+    type: "new_purchase",
+    title: "New Purchase Order",
+    message: "Purchase order #PO-2024-456 created for ₹85,000 from Sun Pharma",
+    amount: "₹85,000",
+    poNumber: "PO-2024-456",
+    supplier: "Sun Pharma",
     time: "2 hours ago",
     read: false,
-    priority: "high",
-    icon: TrendingDown,
-    color: "amber",
+    priority: "medium",
+    icon: ShoppingCart,
+    color: "blue",
   },
   {
-    id: 5,
+    id: 6,
     category: "stock",
     type: "out_of_stock",
     title: "Out of Stock",
-    message: "BT Cotton Seeds - Completely out of stock",
-    product: "BT Cotton Seeds",
+    message: "Insulin Injection 100IU - Completely out of stock",
+    product: "Insulin Injection 100IU",
     time: "3 hours ago",
     read: false,
     priority: "critical",
@@ -105,28 +124,29 @@ const notificationsData = [
     color: "red",
   },
   {
-    id: 6,
-    category: "purchase",
-    type: "new_purchase",
-    title: "New Purchase Order",
-    message: "Purchase order #PO-2024-156 created for ₹1,25,000",
-    amount: "₹1,25,000",
-    poNumber: "PO-2024-156",
-    supplier: "Jain Irrigation",
+    id: 7,
+    category: "payment",
+    type: "supplier_payment",
+    title: "Supplier Payment Due",
+    message: "Payment of ₹1,20,000 due to Cipla Pharmaceuticals tomorrow",
+    amount: "₹1,20,000",
+    amountType: "debit",
+    supplier: "Cipla Pharmaceuticals",
+    dueDate: "Tomorrow",
     time: "4 hours ago",
     read: true,
-    priority: "medium",
-    icon: ShoppingCart,
-    color: "blue",
+    priority: "high",
+    icon: CreditCard,
+    color: "red",
   },
   {
-    id: 7,
+    id: 8,
     category: "purchase",
     type: "purchase_delivered",
-    title: "Purchase Delivered",
-    message: "Order #PO-2024-152 delivered successfully. 50 items received.",
-    poNumber: "PO-2024-152",
-    items: "50 items",
+    title: "Medicine Stock Delivered",
+    message: "Order #PO-2024-445 delivered. 120 items received and verified.",
+    poNumber: "PO-2024-445",
+    items: "120 items",
     time: "5 hours ago",
     read: true,
     priority: "low",
@@ -134,48 +154,103 @@ const notificationsData = [
     color: "emerald",
   },
   {
-    id: 8,
+    id: 9,
     category: "stock",
-    type: "expiry_alert",
-    title: "Product Expiry Warning",
-    message: "12 items expiring in next 7 days. Review inventory now.",
-    expiringItems: "12 items",
-    expiryDate: "7 days",
+    type: "prescription_alert",
+    title: "Prescription Medicine Alert",
+    message: "Schedule H drug dispensed: Alprazolam 0.5mg - Customer ID: C-4567",
+    product: "Alprazolam 0.5mg",
+    customer: "Customer C-4567",
     time: "6 hours ago",
     read: true,
     priority: "medium",
-    icon: Calendar,
+    icon: FileText,
     color: "purple",
   },
   {
-    id: 9,
+    id: 10,
     category: "pending",
     type: "supplier_pending",
     title: "Overdue Supplier Payment",
-    message: "Payment to Krishna Traders overdue by 3 days - ₹22,000",
-    amount: "₹22,000",
-    supplier: "Krishna Traders",
-    overdueBy: "3 days",
+    message: "Payment to Mankind Pharma overdue by 5 days - ₹45,000",
+    amount: "₹45,000",
+    supplier: "Mankind Pharma",
+    overdueBy: "5 days",
     time: "1 day ago",
     read: true,
     priority: "high",
+    icon: AlertTriangle,
+    color: "red",
+  },
+  {
+    id: 11,
+    category: "stock",
+    type: "cold_storage",
+    title: "Cold Storage Temperature Alert",
+    message: "Refrigerator temperature at 12°C. Required: 2-8°C. Check immediately!",
+    temperature: "12°C",
+    time: "1 day ago",
+    read: true,
+    priority: "critical",
+    icon: Thermometer,
+    color: "red",
+  },
+  {
+    id: 12,
+    category: "payment",
+    type: "customer_payment",
+    title: "Insurance Claim Approved",
+    message: "Insurance claim #CLM-2024-789 approved - ₹18,500 to be credited",
+    amount: "₹18,500",
+    amountType: "credit",
+    customer: "Health Insurance Co.",
+    time: "2 days ago",
+    read: true,
+    priority: "low",
+    icon: CheckCircle,
+    color: "emerald",
+  },
+  {
+    id: 13,
+    category: "stock",
+    type: "batch_recall",
+    title: "Batch Recall Notice",
+    message: "Urgent: Batch #BT-4567 of Antibiotic XYZ recalled by manufacturer",
+    product: "Antibiotic XYZ",
+    batchNumber: "BT-4567",
+    time: "2 days ago",
+    read: true,
+    priority: "critical",
     icon: AlertCircle,
     color: "red",
   },
   {
-    id: 10,
-    category: "payment",
-    type: "customer_payment",
-    title: "Partial Payment Received",
-    message: "Vijay Agro paid ₹5,000 (Partial) for Invoice #INV-2024-089",
-    amount: "₹5,000",
-    amountType: "credit",
-    customer: "Vijay Agro",
-    time: "1 day ago",
+    id: 14,
+    category: "purchase",
+    type: "order_delayed",
+    title: "Purchase Order Delayed",
+    message: "Order #PO-2024-432 from Zydus delayed. New ETA: 3 days",
+    poNumber: "PO-2024-432",
+    supplier: "Zydus Cadila",
+    time: "3 days ago",
     read: true,
-    priority: "low",
-    icon: DollarSign,
-    color: "emerald",
+    priority: "medium",
+    icon: Truck,
+    color: "orange",
+  },
+  {
+    id: 15,
+    category: "stock",
+    type: "high_demand",
+    title: "High Demand Alert",
+    message: "Cough Syrup sales increased by 200% in last 7 days. Consider restocking.",
+    product: "Cough Syrup",
+    trend: "+200%",
+    time: "3 days ago",
+    read: true,
+    priority: "medium",
+    icon: Activity,
+    color: "blue",
   },
 ];
 
@@ -343,7 +418,7 @@ const NotificationView = () => {
         {/* Modern Header */}
         <div className="relative">
           <div className="absolute inset-0 rounded-3xl blur-2xl opacity-20"></div>
-          <Card className="relative border-0 shadow-2xl  backdrop-blur-xl overflow-hidden">
+          <Card className="relative border-0 shadow-2xl backdrop-blur-xl overflow-hidden">
             <CardContent className="relative p-6 md:p-2 md:px-6">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                 <div className="flex items-center gap-5">
@@ -360,7 +435,7 @@ const NotificationView = () => {
                   </div>
 
                   <div>
-                    <h1 className="text-2xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text ">
+                    <h1 className="text-2xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text">
                       Notifications
                     </h1>
                     <p className="text-gray-600 mt-1 text-sm md:text-base">
@@ -389,10 +464,10 @@ const NotificationView = () => {
         </div>
 
         {/* Tabs Navigation */}
-        <Card className="border-0 shadow-lg bg-secondary  backdrop-blur-sm">
+        <Card className="border-0 shadow-lg bg-secondary backdrop-blur-sm">
           <CardContent className="p-4">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="w-full grid grid-cols-6 gap-2  p-1.5 h-auto rounded-xl">
+              <TabsList className="w-full grid grid-cols-6 gap-2 p-1.5 h-auto rounded-xl">
                 {categories.map((cat) => (
                   <TabsTrigger
                     key={cat.value}
@@ -415,7 +490,7 @@ const NotificationView = () => {
         {/* Notifications List */}
         <div className="space-y-3">
           {filteredNotifications.length === 0 ? (
-            <Card className="border-0 shadow-lg  backdrop-blur-sm">
+            <Card className="border-0 shadow-lg backdrop-blur-sm">
               <CardContent className="p-16">
                 <div className="flex flex-col items-center justify-center text-center">
                   <div className="p-6 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full mb-6">
@@ -440,7 +515,7 @@ const NotificationView = () => {
                   className={`border-0 shadow-md hover:shadow-xl transition-all duration-300 group ${
                     !notification.read
                       ? "bg-gradient-to-r from-blue-50 via-purple-50/50 to-pink-50/30 ring-2 ring-blue-200/50"
-                      : " backdrop-blur-sm"
+                      : "backdrop-blur-sm"
                   }`}
                 >
                   <CardContent className="p-5">
@@ -523,8 +598,20 @@ const NotificationView = () => {
                           )}
                           {notification.product && (
                             <div className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 border border-amber-200 rounded-lg">
-                              <Package className="h-4 w-4 text-amber-600" />
+                              <Pill className="h-4 w-4 text-amber-600" />
                               <span className="text-sm font-medium text-amber-700">{notification.product}</span>
+                            </div>
+                          )}
+                          {notification.batchNumber && (
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg">
+                              <Package className="h-4 w-4 text-red-600" />
+                              <span className="text-sm font-medium text-red-700">Batch: {notification.batchNumber}</span>
+                            </div>
+                          )}
+                          {notification.temperature && (
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-200 rounded-lg">
+                              <Thermometer className="h-4 w-4 text-red-600" />
+                              <span className="text-sm font-medium text-red-700">Temp: {notification.temperature}</span>
                             </div>
                           )}
                         </div>
@@ -535,7 +622,7 @@ const NotificationView = () => {
                             size="sm"
                             variant="ghost"
                             onClick={() => toggleRead(notification.id)}
-                            className={`h-9 gap-2 text-sm font-medium text-muted-foreground ${
+                            className={`h-9 gap-2 text-sm font-medium text-muted-foreground transition-colors ${
                               !notification.read
                                 ? "hover:bg-blue-50 hover:text-blue-700"
                                 : "hover:bg-orange-50 hover:text-orange-700"
@@ -548,7 +635,7 @@ const NotificationView = () => {
                             size="sm"
                             variant="ghost"
                             onClick={() => deleteNotification(notification.id)}
-                            className="h-9 gap-2 text-sm font-medium hover:bg-red-50 hover:text-red-700 text-muted-foreground"
+                            className="h-9 gap-2 text-sm font-medium hover:bg-red-50 hover:text-red-700 text-muted-foreground transition-colors"
                           >
                             <Trash2 className="h-4 w-4" />
                             Delete
