@@ -44,7 +44,7 @@
 
 
 
- import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/auth-context";
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "MedTrax Team",
-      url: "https://medtrax.com",
+      url: "https://pharma-vaults.vercel.app/",
     },
   ],
   creator: "MedTrax",
@@ -91,37 +91,15 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/assets/favicon.ico" },
-      { url: "/assets/icon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/assets/icon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "../assets/MedTraxLogo.png" },
+      { url: "../assets/MedTraxLogo.png", sizes: "16x16", type: "image/png" },
+      { url: "../assets/MedTraxLogo.png", sizes: "32x32", type: "image/png" },
     ],
     apple: [
-      { url: "/assets/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+      { url: "../assets/MedTraxLogo.png", sizes: "180x180", type: "image/png" },
     ],
   },
-  openGraph: {
-    type: "website",
-    locale: "en_IN",
-    url: "https://medtrax.com",
-    siteName: "MedTrax",
-    title: "MedTrax - Medical Store Management System",
-    description: "Complete medical store management solution for inventory tracking, sales management, prescription handling, and billing.",
-    images: [
-      {
-        url: "/assets/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "MedTrax - Medical Store Management System",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "MedTrax - Medical Store Management System",
-    description: "Complete medical store management solution for inventory tracking, sales management, prescription handling, and billing.",
-    images: ["/assets/twitter-image.png"],
-    creator: "@medtrax",
-  },
+   
   robots: {
     index: true,
     follow: true,
@@ -153,8 +131,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/assets/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
         <meta name="theme-color" content="#0a0a0a" media="(prefers-color-scheme: dark)" />
       </head>
