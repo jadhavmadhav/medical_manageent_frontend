@@ -55,26 +55,26 @@ export function getStatusBadge(status?: string) {
   );
 }
 
-export function renderStockProgress(quantity: number, saleQuantity: number) {
-  const available = quantity - saleQuantity;
-  const total = quantity;
+export function renderStockProgress(inventory: any) {
+  const available = inventory.stock.available;
+  const soldStock = (inventory.stock.purchased - available) || "00";
+  const total = inventory.quantity;
   const percentage = total > 0 ? Math.round((available / total) * 100) : 0;
 
   return (
     <div className="w-full min-w-[150px]">
       <div className="flex justify-between text-xs font-medium mb-1">
-        <span>Sold: {saleQuantity}</span>
+        <span>Sold: {soldStock}</span>
         <span>Available: {available}</span>
       </div>
       <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
         <div
-          className={`h-full rounded-full ${
-            percentage < 20
-              ? "bg-red-500"
-              : percentage < 50
+          className={`h-full rounded-full ${percentage < 20
+            ? "bg-red-500"
+            : percentage < 50
               ? "bg-yellow-500"
               : "bg-green-500"
-          }`}
+            }`}
           style={{ width: `${percentage}%` }}
         ></div>
       </div>

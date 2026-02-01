@@ -52,19 +52,22 @@ export interface searchDoctorPayload {
 export interface Patient {
   id: number;
   _id: string;
-  name: string;
-  phone: string;
-  address?: string;
+  patientName: string;
+  patientAddress?: string;
   age: number;
   gender: string;
-  mobile_number: string;
+  patientMobileNumber: string;
 }
 
 export interface Doctor {
   id: number;
-  name: string;
-  specialization: string;
-  contact: string;
+  doctorName: string;
+  doctorSpecialization: string;
+  doctorContact: string;
+  doctorHospital: string;
+  doctorEmail?: string;
+  doctorAddress?: string;
+  
 }
 
 export interface Product {
@@ -86,6 +89,8 @@ export interface Product {
   batchNo?: string;
   highlightedIndex?: any;
   manufacturer?: string;
+
+  name: string
 }
 
 export interface BillItem {
@@ -107,5 +112,5 @@ export interface SaleData {
   grandTotal: number;
   billNumber?: string;
   date: any;
-  dueDate?:Date | null;
+  dueDate?: Date | null;
 }

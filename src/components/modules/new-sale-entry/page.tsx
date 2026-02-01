@@ -223,7 +223,9 @@ const NewSaleEntryView = ({
     }
 
     return inventories.filter((p: Product) =>
-      p?.item?.toLowerCase().includes(term)
+      p?.name?.toLowerCase().includes(term) ||
+      p?.batchNo?.toLowerCase().includes(term) ||
+      p?.manufacturer?.toLowerCase().includes(term)
     );
   }, [searchTerm, inventories]);
 
@@ -239,89 +241,95 @@ const NewSaleEntryView = ({
 
   // Memoized handlers
   const addProductToBill = useCallback(
-    (product: Product) => {
-      const existingIndex = billItems.findIndex(
-        (i: any) => i._id === product._id
-      );
+  (product: any) => {
+    const sellingPrice = product.pricing?.sellingPerBaseUnit ?? 0;
+    const buyingPrice = product.pricing?.buyingPerBaseUnit ?? 0;
 
-      if (existingIndex >= 0) {
-        const updated = [...billItems];
-        const existing = updated[existingIndex];
-        updated[existingIndex] = {
-          ...existing,
-          quantity: existing.quantity + 1,
-          total:
-            (existing.quantity + 1) *
-            (existing.sellingPrice - existing.discount),
-        };
-        setBillItems(updated);
-      } else {
-        setBillItems([
-          {
-            ...product,
-            quantity: 1,
-            discount: 0,
-            total: Number(product.sellingPrice),
-          },
-          ...billItems,
-        ]);
-      }
+    const existingIndex = billItems.findIndex(
+      (i) => i.inventoryId === product.inventoryId
+    );
 
-      setSearchTerm("");
-      // No need to clear filteredProducts as it is derived from searchTerm
-      setHighlightedIndex(-1);
-      medicineSearchRef.current?.focus();
-    },
-    [billItems]
-  );
+    if (existingIndex >= 0) {
+      const updated = [...billItems];
+      const existing = updated[existingIndex];
+
+      updated[existingIndex] = {
+        ...existing,
+        quantity: existing.quantity + 1,
+        total:
+          (existing.quantity + 1) *
+          (sellingPrice - existing.discount),
+      };
+      setBillItems(updated);
+    } else {
+      setBillItems([
+        {
+          inventoryId: product.inventoryId,
+          productId: product._id,
+          name: product.name,
+          batchNo: product.batchNo,
+          unit: product.unit,
+          sellingPrice,
+          buyingPrice,
+          discount: 0,
+          quantity: 1,
+          total: sellingPrice, 
+        },
+        ...billItems,
+      ]);
+    }
+
+    setSearchTerm("");
+    setHighlightedIndex(-1);
+  },
+  [billItems]
+);
+
 
   const updateQuantity = useCallback(
-    (productId: string, newQty: string) => {
-      if (isNaN(Number(newQty))) return;
-      const product = inventories?.find((p: any) => p?._id === productId);
-      if (product && Number(newQty) > product?.availableQuantity) {
-        // alert(`Stock limit: ${product?.availableQuantity}`);
-        toast.warning(`Stock limit: ${product?.availableQuantity}`);
-        return;
-      }
-      setBillItems((items) =>
-        items.map((i: any) =>
-          i._id === productId
-            ? {
-              ...i,
-              quantity: Number(newQty),
-              // Ensure total calculation is correct
-              total: Number(newQty) * (i.sellingPrice - i.discount),
-            }
-            : i
-        )
-      );
-    },
-    [inventories]
-  );
+  (inventoryId: string, newQty: string) => {
+    const qty = Number(newQty);
+    if (isNaN(qty)) return;
 
-  const updateDiscount = useCallback(
-    (productId: string, newDiscount: string) => {
-      if (isNaN(Number(newDiscount))) return;
-      setBillItems((items) =>
-        items?.map((i: any) =>
-          i._id === productId
-            ? {
+    setBillItems((items) =>
+      items.map((i) =>
+        i.inventoryId === inventoryId
+          ? {
               ...i,
-              discount: Number(newDiscount),
-              // Ensure total calculation is correct
-              total: i.quantity * (i.sellingPrice - Number(newDiscount)),
+              quantity: qty,
+              total: qty * (i.sellingPrice - i.discount),
             }
-            : i
-        )
-      );
-    },
-    []
-  );
+          : i
+      )
+    );
+  },
+  []
+);
+
+const updateDiscount = useCallback(
+  (inventoryId: string, newDiscount: string) => {
+    const discount = Number(newDiscount);
+    if (isNaN(discount)) return;
+
+    setBillItems((items) =>
+      items.map((i) =>
+        i.inventoryId === inventoryId
+          ? {
+              ...i,
+              discount,
+              total: i.quantity * (i.sellingPrice - discount),
+            }
+          : i
+      )
+    );
+  },
+  []
+);
+
 
   const removeItem = useCallback(
     (productId: string) =>
-      setBillItems((items) => items?.filter((i: any) => i._id !== productId)),
+      setBillItems((items) => items?.filter((i: any) => i.inventoryId !== productId)),
     []
   );
 
@@ -472,9 +480,9 @@ const NewSaleEntryView = ({
                 >
                   <User className="h-5 w-5 text-blue-600" />
                   <div className="flex flex-col">
-                    {selectedPatient ? (
+                    {selectedPatient?.patientName ? (
                       <p className="text-blue-800 font-semibold truncate max-w-[150px]">
-                        {selectedPatient.name}
+                        {selectedPatient.patientName} - {selectedPatient.patientMobileNumber}
                       </p>
                     ) : (
                       <p className="text-gray-500 italic">
@@ -505,7 +513,7 @@ const NewSaleEntryView = ({
                   <div className="flex flex-col">
                     {selectedDoctor ? (
                       <p className="text-green-800 font-semibold truncate max-w-[150px]">
-                        {selectedDoctor.name}
+                        {selectedDoctor.doctorName} - {selectedDoctor.doctorSpecialization} - {selectedDoctor.doctorHospital}
                       </p>
                     ) : (
                       <p className="text-gray-500 italic">No Doctor Selected</p>

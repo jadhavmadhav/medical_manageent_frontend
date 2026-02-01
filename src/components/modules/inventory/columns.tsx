@@ -25,14 +25,27 @@ export interface inventories {
 }
 
 export const columns: ColumnDef<inventories>[] = [
+  // {
+  //   accessorKey: "purchaseBillNumber",
+  //   header: "Bill Number",
+  // },
   {
-    accessorKey: "billNumber",
-    header: "Bill Number",
-  },
-  {
-    accessorKey: "item",
+    accessorKey: "name",
     header: "Item Name",
   },
+
+
+ {
+    accessorKey: "batchNo",
+    header: "Batch Number",
+  },
+  {
+    id: "stockProgress",
+    header: "Stock Status",
+    cell: ({ row }) =>
+      renderStockProgress(row.original),
+  },
+
   {
     accessorKey: "manufacturer",
     header: "Manufacturer	",
@@ -40,38 +53,25 @@ export const columns: ColumnDef<inventories>[] = [
   {
     accessorKey: "quantity",
     header: "Quantity",
+    cell: (params: any) => {
+      const stock = params.row.original.stock;
+      const unit = params.row.original.unit.baseUnit;
+      return <div className="text-center">{stock.available} {unit}</div>
+    }
   },
-  {
-    accessorKey: "saleQuantity",
-    header: "Soled Quantity",
-  },
-  {
-    id: "stockProgress",
-    header: "Stock Status",
-    cell: ({ row }) =>
-      renderStockProgress(row.original.quantity, row.original.saleQuantity),
-  },
-  {
-    accessorKey: "batchNo",
-    header: "Batch Number",
-  },
+
+  
+ 
 
   {
     accessorKey: "buyingPrice",
     header: "Buying Price",
     cell: (params: any) => {
-      const buyingPrice = params.getValue()
-      const sellingPrice = params.row.original.sellingPrice
-      if (Number(sellingPrice) < Number(buyingPrice)) {
-        return (
-          <div className="text-red-600 font-medium">
-            {numberFormatter(Number(buyingPrice) || 0)}
-          </div>
-        )
-      }
+      const buyingPrice = params.row.original.pricing?.buyingPerBaseUnit || 0
+
       return (
         <div>
-          {numberFormatter(Number(sellingPrice) || 0)}
+          {numberFormatter(Number(buyingPrice) || 0)}
         </div>
       )
     },
@@ -80,15 +80,7 @@ export const columns: ColumnDef<inventories>[] = [
     accessorKey: "sellingPrice",
     header: "Selling Price",
     cell: (params: any) => {
-      const sellingPrice = params.getValue()
-      const buyingPrice = params.row.original.buyingPrice
-      if (Number(sellingPrice) < Number(buyingPrice)) {
-        return (
-          <div className="text-red-600 font-medium">
-            {numberFormatter(Number(sellingPrice) || 0)}
-          </div>
-        )
-      }
+      const sellingPrice = params.row.original.pricing?.sellingPerBaseUnit || 0
       return (
         <div>
           {numberFormatter(Number(sellingPrice) || 0)}
@@ -97,9 +89,8 @@ export const columns: ColumnDef<inventories>[] = [
     },
   },
   {
-    accessorKey: "manufactureDate",
-    header: "Manufacture Date",
-    cell: ({ getValue }) => dateFormatter(getValue()),
+    accessorKey: "manufacturer",
+    header: "Manufacturer",
   },
   {
     accessorKey: "expiryDate",
@@ -120,14 +111,7 @@ export const columns: ColumnDef<inventories>[] = [
     header: "buying Date",
     cell: ({ getValue }) => dateFormatter(getValue()),
   },
-  {
-    accessorKey: "sgst",
-    header: "SGST (%)",
-  },
-  {
-    accessorKey: "cgst",
-    header: "CGST (%)",
-  },
+
   {
     accessorKey: "gstPercent",
     header: "GST (%)",

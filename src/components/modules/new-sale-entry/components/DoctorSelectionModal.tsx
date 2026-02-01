@@ -45,7 +45,7 @@ const DoctorSelectionModal = React.memo(
     const debouncedSearch = useDebounce(search, 300);
 
     const [doctors, setDoctors] = useState<Doctor[]>([]);
- 
+
     const {
       mutate: searchDoctorsMutate,
       isPending: loading,
@@ -58,7 +58,7 @@ const DoctorSelectionModal = React.memo(
         setDoctors([]);
       },
     });
- 
+
     useEffect(() => {
       if (!doctorModalOpen) return;
 
@@ -80,7 +80,7 @@ const DoctorSelectionModal = React.memo(
       () =>
         doctors.map((d) => ({
           key: d._id.toString(),
-          label: `${d.name} (${d.specialization})`,
+          label: `${d.doctorName} - ${d.doctorSpecialization} - ${d.doctorHospital}`,
           doctor: d,
         })),
       [doctors]

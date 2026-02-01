@@ -155,7 +155,7 @@ import { RotateCcw } from "lucide-react";
 
 interface BillItem {
   _id: string;
-  item: string;
+  name: string;
   quantity: number;
   sellingPrice: number;
   isReturn?: boolean;
@@ -242,7 +242,7 @@ export function ViewBill({ bill }: ViewBillProps) {
                         key={item._id}
                         className={`border-b last:border-0 ${rowClass}`}
                       >
-                        <td className="py-2 px-4 font-medium">{item.item}</td>
+                        <td className="py-2 px-4 font-medium">{item.name}</td>
                         <td className="py-2 px-4 text-center">
                           {item.quantity}
                         </td>

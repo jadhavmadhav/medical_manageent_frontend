@@ -27,7 +27,15 @@ interface PatientBills {
 
 export const columns: ColumnDef<PatientBills>[] = [
   {
-    accessorKey: "patient.name",
+    accessorKey: "invoiceNo",
+    header: "Bill ID",
+    cell: (params: any) => {
+      const value = params.getValue();
+      return <div className="w-[150px]">{value || "-"}</div>;
+    }
+  },
+  {
+    accessorKey: "patient.patientName",
     header: "Patient Name",
     cell: (params: any) => {
       const value = params.getValue();
@@ -35,7 +43,7 @@ export const columns: ColumnDef<PatientBills>[] = [
     },
   },
   {
-    accessorKey: "patient.mobile_number",
+    accessorKey: "patient.patientMobileNumber",
     header: "Patient Mobile Number",
     cell: (params: any) => {
       const value = params.getValue();
@@ -44,7 +52,7 @@ export const columns: ColumnDef<PatientBills>[] = [
   },
 
   {
-    accessorKey: "doctor.name",
+    accessorKey: "doctor.doctorName",
     header: "Doctor Name",
     cell: (params: any) => {
       const value = params.getValue();
@@ -61,7 +69,7 @@ export const columns: ColumnDef<PatientBills>[] = [
         <div className="max-w-[300px] flex flex-wrap gap-2">
           {value.map((x: any, idx: number) => (
             <span key={idx}>
-              {x.item}
+              {x.name}
               {idx < value.length - 1 && ", "}
             </span>
           ))}

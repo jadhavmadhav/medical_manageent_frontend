@@ -57,16 +57,49 @@ export default function InventoryPage({
         purchaseDate: vendorData?.purchaseDate,
         paymentMethod: vendorData?.paymentMethod,
         paymentStatus: vendorData?.paymentStatus,
+        // inventories: dataToSave?.map((item) => {
+        //   const transformed: Record<string, any> = {};
+        //   extraFieldsForProduct?.forEach((field) => {
+        //     transformed[field.key] =
+        //       field.type === "date" && item[field.label]
+        //         ? new Date(item[field.label]).toISOString()
+        //         : item[field.label] ?? null;
+        //   });
+        //   return transformed;
+        // }),
         inventories: dataToSave?.map((item) => {
           const transformed: Record<string, any> = {};
+
+          // 1. Handle configured extra fields
           extraFieldsForProduct?.forEach((field) => {
             transformed[field.key] =
               field.type === "date" && item[field.label]
                 ? new Date(item[field.label]).toISOString()
                 : item[field.label] ?? null;
           });
+
+          // 2. Allow extra dynamically added fields
+          Object.keys(item).forEach((key) => {
+            const isAlreadyMapped = extraFieldsForProduct?.some(
+              (field) => field.key === key || field.label === key
+            );
+
+            if (!isAlreadyMapped) {
+              transformed[key] = item[key] ?? null;
+            }
+          });
+
+          // 3. Build displayItem safely
+
+          const itemName = transformed["item"] ?? item["item"]
+          const size = transformed["Unit"].baseUnitSize ?? item["Unit"].baseUnitSize
+          const unit = transformed["Unit"].label ?? item["Unit"].label
+
+          transformed["displayItem"] = `${itemName} - ${size} ${unit}`;
+
           return transformed;
-        }),
+        })
+
       };
 
       // Call your API here
