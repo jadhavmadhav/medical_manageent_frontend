@@ -67,7 +67,7 @@ export interface Doctor {
   doctorHospital: string;
   doctorEmail?: string;
   doctorAddress?: string;
-  
+
 }
 
 export interface Product {
@@ -89,9 +89,10 @@ export interface Product {
   batchNo?: string;
   highlightedIndex?: any;
   manufacturer?: string;
-pricing?:any;
-stock?:any;
-  name: string
+  pricing?: any;
+  stock?: any;
+  name: string;
+  isReturn?: boolean;
 }
 
 export interface BillItem {

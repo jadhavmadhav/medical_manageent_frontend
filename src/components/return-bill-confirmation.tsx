@@ -19,12 +19,14 @@ interface ReturnDialogProps {
   bill: any;
   invalidateType: string;
   label: string;
+  onOpenChange?: (open: boolean) => void;
 }
 
 export function ReturnConfirmationDialog({
   bill,
   invalidateType,
   label,
+  onOpenChange
 }: // onConfirm,
 ReturnDialogProps) {
   const queryClient = useQueryClient();
@@ -61,7 +63,8 @@ ReturnDialogProps) {
         <Button
           variant="destructive"
           disabled={isReturnBill}
-          className="min-w-[100px]"
+          className="w-full"
+          onClick={() => onOpenChange?.(true)}
         >
           {label}
         </Button>
