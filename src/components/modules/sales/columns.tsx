@@ -69,9 +69,10 @@
 
 
 // columns.tsx
+import { Sale } from "@/types/sales";
 import { dateFormatter, numberFormatter } from "@/utils/constants";
 import { ColumnDef } from "@tanstack/react-table";
-import type { Sale } from "./types";
+// import  { Sale } from "./types";
 
 export const columns: ColumnDef<Sale>[] = [
   { accessorKey: "name", header: "Product Name" },
@@ -87,7 +88,7 @@ export const columns: ColumnDef<Sale>[] = [
     header: "Quantity",
     cell: ({ row, getValue }) => (
       <div className="capitalize w-[100px]">
-        {getValue()} {row.original.unit?.baseUnit}
+        {String(getValue())} {row.original.unit?.baseUnit}
       </div>
     ),
   },

@@ -89,7 +89,8 @@ export interface Product {
   batchNo?: string;
   highlightedIndex?: any;
   manufacturer?: string;
-
+pricing?:any;
+stock?:any;
   name: string
 }
 
