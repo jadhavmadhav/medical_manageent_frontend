@@ -158,16 +158,7 @@ export const columns: ColumnDef<PatientBill>[] = [
               invalidateType="patientBills"
               label={isReturnBill ? "Returned" : "Return"}
               onOpenChange={() => setIsOpen(false)}
-            >
-              <DropdownMenuItem
-                onSelect={(e) => e.preventDefault()}
-                disabled={isReturnBill}
-                className={isReturnBill ? "opacity-50 cursor-not-allowed" : "text-red-600"}
-              >
-                {/* <RotateCcw className="mr-2 h-4 w-4" /> */}
-                {/* {isReturnBill ? "Returned" : "Return Bill"} */}
-              </DropdownMenuItem>
-            </ReturnConfirmationDialog>
+            />
 
 
           </DropdownMenuContent>
