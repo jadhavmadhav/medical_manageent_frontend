@@ -68,7 +68,7 @@ const DoctorSelectionModal = React.memo(
       });
     }, [debouncedSearch, enterpriseId, searchDoctorsMutate]);
 
-    // Reset on close
+    // Reset on close 
     useEffect(() => {
       if (!doctorModalOpen) {
         setSearch("");
