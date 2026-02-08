@@ -137,8 +137,8 @@ const InventoryManagementSection = () => {
               }`}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                    <p className="text-sm text-gray-600">{stat.label}</p>
+                    <p className="text-2xl font-bold text-muted-foreground">{stat.value}</p>
+                    <p className="text-sm text-muted-foreground">{stat.label}</p>
                   </div>
                   <div className={`p-2 rounded-lg ${
                     stat.color === 'blue' ? 'bg-blue-100 text-blue-600' :
@@ -155,7 +155,7 @@ const InventoryManagementSection = () => {
                   }`}>
                     {stat.change}
                   </span>
-                  <span className="text-xs text-gray-500 ml-2">from last month</span>
+                  <span className="text-xs text-muted-foreground ml-2">from last month</span>
                 </div>
               </div>
             );
@@ -175,7 +175,7 @@ const InventoryManagementSection = () => {
               }`}
             >
               {category.name}
-              <span className="ml-2 bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded-full">
+              <span className="ml-2 bg-gray-100 text-muted-foreground text-xs px-2 py-0.5 rounded-full">
                 {category.count}
               </span>
             </button>
@@ -186,11 +186,11 @@ const InventoryManagementSection = () => {
           {/* Low Stock Alerts */}
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900 flex items-center">
+              <h3 className="font-semibold text-muted-foreground flex items-center">
                 <AlertTriangle size={16} className="mr-2 text-red-500" />
                 Low Stock Alerts
               </h3>
-              <span className="text-xs text-gray-500">Reorder needed</span>
+              <span className="text-xs text-muted-foreground">Reorder needed</span>
             </div>
             
             <div className="space-y-3">
@@ -200,12 +200,12 @@ const InventoryManagementSection = () => {
                   <div key={item.id} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                     <div className="flex justify-between items-start mb-3">
                       <div>
-                        <h4 className="font-medium text-gray-900">{item.name}</h4>
+                        <h4 className="font-medium text-muted-foreground">{item.name}</h4>
                         <div className="flex items-center mt-1">
-                          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded">
+                          <span className="text-xs text-muted-foreground bg-gray-100 px-2 py-0.5 rounded">
                             {item.category}
                           </span>
-                          <span className="text-xs text-gray-500 ml-2">{item.supplier}</span>
+                          <span className="text-xs text-muted-foreground ml-2">{item.supplier}</span>
                         </div>
                       </div>
                       <span className={`text-sm font-semibold ${
@@ -222,7 +222,7 @@ const InventoryManagementSection = () => {
                           style={{ width: `${percentage}%` }}
                         ></div>
                       </div>
-                      <div className="flex justify-between text-xs text-gray-500">
+                      <div className="flex justify-between text-xs text-muted-foreground">
                         <span>{percentage.toFixed(1)}% of minimum</span>
                         <span>Last ordered: {item.lastOrdered}</span>
                       </div>
@@ -232,7 +232,7 @@ const InventoryManagementSection = () => {
                       <button className="flex-1 py-2 text-sm font-medium text-blue-600 hover:text-blue-800 border border-blue-200 rounded-lg hover:bg-blue-50">
                         Order Now
                       </button>
-                      <button className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg">
+                      <button className="p-2 text-muted-foreground hover:text-gray-700 hover:bg-gray-100 rounded-lg">
                         <RotateCcw size={16} />
                       </button>
                     </div>
@@ -249,11 +249,11 @@ const InventoryManagementSection = () => {
           {/* Expiring Items */}
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-gray-900 flex items-center">
+              <h3 className="font-semibold text-muted-foreground flex items-center">
                 <Calendar size={16} className="mr-2 text-orange-500" />
                 Expiring Soon
               </h3>
-              <span className="text-xs text-gray-500">Next 30 days</span>
+              <span className="text-xs text-muted-foreground">Next 30 days</span>
             </div>
             
             <div className="space-y-3">
@@ -261,7 +261,7 @@ const InventoryManagementSection = () => {
                 <div key={item.id} className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h4 className="font-medium text-gray-900">{item.name}</h4>
+                      <h4 className="font-medium text-muted-foreground">{item.name}</h4>
                       <div className="flex items-center mt-1">
                         <span className={`px-2 py-0.5 text-xs rounded-full ${
                           item.daysUntil < 7 ? 'bg-red-100 text-red-800' :
@@ -270,12 +270,12 @@ const InventoryManagementSection = () => {
                         }`}>
                           {item.daysUntil} days
                         </span>
-                        <span className="text-xs text-gray-500 ml-2">{item.category}</span>
+                        <span className="text-xs text-muted-foreground ml-2">{item.category}</span>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-semibold text-gray-900">{item.quantity} units</p>
-                      <p className="text-xs text-gray-500">Exp: {item.expiry}</p>
+                      <p className="font-semibold text-muted-foreground">{item.quantity} units</p>
+                      <p className="text-xs text-muted-foreground">Exp: {item.expiry}</p>
                     </div>
                   </div>
                   
@@ -292,7 +292,7 @@ const InventoryManagementSection = () => {
             </div>
 
             {/* Recent Orders */}
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <h4 className="font-medium text-gray-900 mb-3 flex items-center">
                 <Truck size={16} className="mr-2 text-blue-500" />
                 Recent Orders
@@ -314,10 +314,10 @@ const InventoryManagementSection = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
 
             {/* Quick Order */}
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
+            {/* <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-100">
               <div className="flex items-center justify-between">
                 <div>
                   <h4 className="font-medium text-blue-900">Quick Reorder</h4>
@@ -335,18 +335,18 @@ const InventoryManagementSection = () => {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
         {/* Inventory Value Summary */}
-        <div className="pt-6 border-t border-gray-200">
+        <div className="pt-6 border-t border">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900 flex items-center">
+            <h3 className="font-semibold text-muted-foreground flex items-center">
               <BarChart size={16} className="mr-2 text-green-500" />
               Inventory Value Summary
             </h3>
-            <span className="text-sm text-gray-500">Total: $124,850</span>
+            <span className="text-sm text-muted-foreground">Total: $124,850</span>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -356,10 +356,10 @@ const InventoryManagementSection = () => {
               { category: 'PPE', value: '$28,150', percentage: 23, color: 'bg-purple-500' },
               { category: 'Supplies', value: '$19,000', percentage: 15, color: 'bg-orange-500' },
             ].map((item) => (
-              <div key={item.category} className="p-4 border border-gray-200 rounded-lg">
+              <div key={item.category} className="p-4 border rounded-lg">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="font-medium text-gray-900">{item.category}</span>
-                  <span className="text-sm font-semibold text-gray-900">{item.value}</span>
+                  <span className="font-medium text-muted-foreground">{item.category}</span>
+                  <span className="text-sm font-semibold text-muted-foreground">{item.value}</span>
                 </div>
                 <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                   <div 
@@ -367,7 +367,7 @@ const InventoryManagementSection = () => {
                     style={{ width: `${item.percentage}%` }}
                   ></div>
                 </div>
-                <div className="flex justify-between text-xs text-gray-500 mt-2">
+                <div className="flex justify-between text-xs text-muted-foreground mt-2">
                   <span>{item.percentage}% of total</span>
                   <span>+3.2%</span>
                 </div>

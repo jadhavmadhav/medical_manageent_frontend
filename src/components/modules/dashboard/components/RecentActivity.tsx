@@ -62,9 +62,9 @@ const RecentActivity = () => {
   ];
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+    <div className=" rounded-xl shadow-sm border  p-6">
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-gray-900">Recent Activity</h2>
+        <h2 className="text-lg font-semibold text-muted-foreground">Recent Activity</h2>
         <button className="text-sm text-blue-600 hover:text-blue-800 font-medium">
           View All →
         </button>
@@ -74,19 +74,19 @@ const RecentActivity = () => {
         {activities.map((activity) => {
           const Icon = activity.icon;
           return (
-            <div key={activity.id} className="pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+            <div key={activity.id} className="pb-4 border-b  last:border-0 last:pb-0">
               <div className="flex items-start">
                 <div className={`p-2 rounded-lg ${activity.color} mr-3`}>
                   <Icon size={16} />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start">
-                    <h4 className="font-medium text-gray-900 truncate">{activity.title}</h4>
-                    <span className="text-xs text-gray-500 ml-2">{activity.time}</span>
+                    <h4 className="font-medium text-muted-foreground truncate">{activity.title}</h4>
+                    <span className="text-xs text-muted-foreground ml-2">{activity.time}</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
+                  <p className="text-sm text-muted-foreground mt-1">{activity.description}</p>
                   {activity.amount && (
-                    <p className="text-sm font-medium text-gray-900 mt-1">{activity.amount}</p>
+                    <p className="text-sm font-medium text-muted-foreground mt-1">{activity.amount}</p>
                   )}
                 </div>
               </div>
@@ -96,13 +96,13 @@ const RecentActivity = () => {
       </div>
       
       {/* System Notifications */}
-      <div className="mt-6 pt-6 border-t border-gray-200">
+      <div className="mt-6 pt-6 border-t ">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-medium text-gray-900 flex items-center">
+          <h3 className="font-medium text-muted-foreground flex items-center">
             <AlertCircle size={16} className="mr-2 text-yellow-500" />
             System Notifications
           </h3>
-          <span className="text-xs text-gray-500">2 new</span>
+          <span className="text-xs text-muted-foreground">2 new</span>
         </div>
         
         <div className="space-y-3">
