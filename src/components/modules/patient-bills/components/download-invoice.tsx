@@ -1,3 +1,4 @@
+// // download-invoice.tsx
 // import {
 //   AlertDialog,
 //   AlertDialogContent,
@@ -9,10 +10,11 @@
 // import { Button } from "@/components/ui/button";
 // import { getInvoiceDetails } from "@/services/patient-bills";
 // import { dateFormatter } from "@/utils/constants";
-// import { useEffect, useState, useCallback } from "react";
-// import html2canvas from "html2canvas-pro";  // <-- FIXED: Use pro version for oklch support
+// import { useEffect, useState, useCallback, memo } from "react";
+// import html2canvas from "html2canvas-pro";
 // import jsPDF from "jspdf";
 // import { Loader2, Download } from "lucide-react";
+// import { Patient, Product } from "@/types/new-sale-entry";
 
 // // === Types ===
 // interface Item {
@@ -21,7 +23,7 @@
 //   sellingPrice: number;
 //   cgst: number;
 //   sgst: number;
-//   locker: string;
+//   locker?: string;
 // }
 
 // interface Bill {
@@ -32,7 +34,8 @@
 //   date: string;
 //   discountAmount: number;
 //   totalAmount: number;
-//   items: Item[];
+//   items: Product[];
+//   patient?: Patient
 // }
 
 // interface Enterprise {
@@ -49,17 +52,38 @@
 
 // interface DownloadInvoiceProps {
 //   id: string;
+//   open?: boolean;
+//   close?: () => void;
+//   children?: React.ReactNode;
 // }
 
-// export const DownloadInvoice = ({ id }: DownloadInvoiceProps) => {
+// // Memoized table row component
+// const InvoiceTableRow = memo(({ item, index }: { item: Product; index: number }) => {
+//   const total = Number(item?.quantity || 0) * item.sellingPrice;
+//   const gstPercent = (Number(item.cgst) || 0) + (Number(item.sgst) || 0);
+
+//   return (
+//     <tr className="">
+//       <td className="border border-gray-300 px-4 py-3">{index + 1}</td>
+//       <td className="border border-gray-300 px-4 py-3">{item.name}</td>
+//       <td className="border border-gray-300 px-4 py-3 text-center">{item.quantity} {item.unit?.baseUnit}</td>
+//       <td className="border border-gray-300 px-4 py-3 text-right">₹{item.sellingPrice.toFixed(2)}</td>
+//       <td className="border border-gray-300 px-4 py-3 text-center">{gstPercent}%</td>
+//       <td className="border border-gray-300 px-4 py-3 text-right font-medium">₹{total.toFixed(2)}</td>
+//     </tr>
+//   );
+// });
+
+// InvoiceTableRow.displayName = "InvoiceTableRow";
+
+// export const DownloadInvoice = memo(({ id, open, close, children }: DownloadInvoiceProps) => {
 //   const [billDetails, setBillDetails] = useState<InvoiceDetails | null>(null);
 //   const [isLoading, setIsLoading] = useState(false);
-//   const [isDialogOpen, setIsDialogOpen] = useState(false);
 //   const [isDownloading, setIsDownloading] = useState(false);
 
-//   // Fetch invoice when dialog opens
 //   const fetchInvoice = useCallback(async () => {
 //     if (!id) return;
+
 //     setIsLoading(true);
 //     try {
 //       const response = await getInvoiceDetails(id);
@@ -73,20 +97,19 @@
 //   }, [id]);
 
 //   useEffect(() => {
-//     if (isDialogOpen) {
+//     if (open) {
 //       fetchInvoice();
 //     } else {
-//       setBillDetails(null); // Reset on close
+//       setBillDetails(null);
 //     }
-//   }, [isDialogOpen, fetchInvoice]);
+//   }, [open, fetchInvoice]);
 
-//   // === PDF Download Function (Now Works with oklch Colors) ===
-//   const handleDownloadPDF = async () => {
+//   const handleDownloadPDF = useCallback(async () => {
 //     if (!billDetails) return;
 
 //     setIsDownloading(true);
 
-//     // Critical: Wait for DOM to fully render (especially fonts, layout)
+//     // Wait for DOM to render
 //     await new Promise((resolve) => setTimeout(resolve, 500));
 
 //     const element = document.getElementById("print-area");
@@ -116,11 +139,9 @@
 //       let heightLeft = imgHeight;
 //       let position = 0;
 
-//       // First page
 //       pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
 //       heightLeft -= pdfHeight;
 
-//       // Add new pages if content overflows
 //       while (heightLeft >= 0) {
 //         position = heightLeft - imgHeight;
 //         pdf.addPage();
@@ -135,142 +156,136 @@
 //     } finally {
 //       setIsDownloading(false);
 //     }
-//   };
+//   }, [billDetails]);
+
+ 
 
 //   return (
-//     <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-//       <AlertDialogTrigger asChild>
-//         {/* <Button  className="flex w-full items-center gap-2 cursor-pointer"> */}
-//         <div>
+//     <AlertDialog open={open} onOpenChange={close}>
+//       <AlertDialogContent
+//         className="min-w-[90vw] max-h-[90vh] p-0 flex flex-col overflow-hidden bg-white text-black dark:bg-white dark:text-black"
+//       >
 
-//           <Download className="w-4 h-4" />
-//           Download
-//         </div>
-//         {/* </Button> */}
-//       </AlertDialogTrigger>
-
-//       <AlertDialogContent className="min-w-[90vw] max-h-[90vh] p-0 flex flex-col overflow-auto">
-//         <AlertDialogHeader className="p-6 border-b bg-gray-50">
-//           <AlertDialogTitle className="text-2xl font-bold text-gray-900">
+//         <AlertDialogHeader className="p-6 border-b shrink-0">
+//           <AlertDialogTitle className="text-2xl font-bold ">
 //             Invoice Preview
 //           </AlertDialogTitle>
 //         </AlertDialogHeader>
 
-//         {/* Printable Area */}
-//         <div id="print-area" className="bg-white text-gray-800 p-10 flex-1  overflow-auto">
-//           {isLoading && (
-//             <div className="flex flex-col items-center justify-center h-96">
-//               <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
-//               <p className="mt-4 text-lg">Loading invoice details...</p>
-//             </div>
-//           )}
-
-//           {!isLoading && billDetails && (
-//             <>
-//               {/* Header */}
-//               <div className="flex justify-between items-start mb-8 border-b pb-6">
-//                 <div>
-//                   <h1 className="text-3xl font-bold text-blue-700">
-//                     {billDetails.enterprise.name}
-//                   </h1>
-//                   <p className="text-sm text-gray-600 mt-2">
-//                     {billDetails.enterprise.address}
-//                   </p>
-//                   <p className="text-sm text-gray-600">
-//                     Email: {billDetails.enterprise.email} | Phone: {billDetails.enterprise.mobileNumber}
-//                   </p>
-//                 </div>
-//                 <div className="text-right">
-//                   <h2 className="text-4xl font-bold text-gray-900">INVOICE</h2>
-//                   <p className="text-sm mt-3">
-//                     <span className="font-semibold">Invoice #:</span> {billDetails.bill._id}
-//                   </p>
-//                   <p className="text-sm">
-//                     <span className="font-semibold">Date:</span> {dateFormatter(billDetails.bill.date)}
-//                   </p>
-//                 </div>
+//         <div className="flex-1 overflow-auto ">
+//           <div id="print-area" className="p-10">
+//             {isLoading && (
+//               <div className="flex flex-col items-center justify-center h-96">
+//                 <Loader2 className="w-10 h-10 animate-spin" />
+//                 <p className="mt-4 text-lg">Loading invoice details...</p>
 //               </div>
+//             )}
 
-//               {/* Bill To */}
-//               <div className="mb-8 p-5 bg-gray-50 rounded-lg border">
-//                 <h3 className="font-semibold text-lg mb-2">Bill To:</h3>
-//                 <p className="font-medium">{billDetails.bill.customerName}</p>
-//                 <p className="text-gray-700">{billDetails.bill.customerAddress}</p>
-//                 <p className="text-gray-700">Phone: {billDetails.bill.mobileNumber}</p>
-//               </div>
+//             {!isLoading && billDetails && (
+//               <>
+//                 {/* Header */}
+//                 <div className="flex justify-between items-start mb-8 border-b pb-6">
+//                   <div>
+//                     <h1 className="text-3xl font-bold">
+//                       {billDetails.enterprise.name}
+//                     </h1>
+//                     <p className="text-sm text-muted-foreground mt-2">
+//                       {billDetails.enterprise.address}
+//                     </p>
+//                     <p className="text-sm text-muted-foreground">
+//                       Email: {billDetails.enterprise.email} | Phone:{" "}
+//                       {billDetails.enterprise.mobileNumber}
+//                     </p>
+//                   </div>
+//                   <div className="text-right">
+//                     <h2 className="text-4xl font-bold ">INVOICE</h2>
+//                     <p className="text-sm mt-3">
+//                       <span className="font-semibold text-muted-foreground">Invoice #:</span>
+//                       <span className="text-muted-foreground font-normal"> {billDetails.bill._id}
+//                       </span>
+//                     </p>
+//                     <p className="text-sm">
+//                       <span className="font-semibold text-muted-foreground">Date:</span>{" "}
 
-//               {/* Items Table */}
-//               <table className="w-full mb-8 border-collapse text-sm">
-//                 <thead>
-//                   <tr className="bg-gray-100">
-//                     <th className="border border-gray-300 px-4 py-3 text-left">#</th>
-//                     <th className="border border-gray-300 px-4 py-3 text-left">Item</th>
-//                     <th className="border border-gray-300 px-4 py-3 text-center">Qty</th>
-//                     <th className="border border-gray-300 px-4 py-3 text-right">Price</th>
-//                     <th className="border border-gray-300 px-4 py-3 text-center">GST %</th>
-//                     {/* <th className="border border-gray-300 px-4 py-3 text-center">Locker</th> */}
-//                     <th className="border border-gray-300 px-4 py-3 text-right font-semibold">Total</th>
-//                   </tr>
-//                 </thead>
-//                 <tbody>
-//                   {billDetails.bill.items.map((item, index) => {
-//                     const total = item.quantity * item.sellingPrice;
-//                     const gstPercent = (Number(item.cgst) || 0) + (Number(item.sgst) || 0);
-//                     return (
-//                       <tr key={index} className="hover:bg-gray-50">
-//                         <td className="border border-gray-300 px-4 py-3">{index + 1}</td>
-//                         <td className="border border-gray-300 px-4 py-3">{item.item}</td>
-//                         <td className="border border-gray-300 px-4 py-3 text-center">{item.quantity}</td>
-//                         <td className="border border-gray-300 px-4 py-3 text-right">₹{item.sellingPrice.toFixed(2)}</td>
-//                         <td className="border border-gray-300 px-4 py-3 text-center">{gstPercent}%</td>
-//                         {/* <td className="border border-gray-300 px-4 py-3 text-center">{item.locker}</td> */}
-//                         <td className="border border-gray-300 px-4 py-3 text-right font-medium">₹{total.toFixed(2)}</td>
-//                       </tr>
-//                     );
-//                   })}
-//                 </tbody>
-//               </table>
+//                       <span className="text-muted-foreground font-normal">
 
-//               {/* Totals */}
-//               <div className="flex justify-end mb-8">
-//                 <div className="w-full max-w-md border border-gray-300 rounded-lg overflow-hidden">
-//                   {billDetails.bill.discountAmount > 0 && (
-//                     <div className="flex justify-between px-6 py-3 bg-red-50">
-//                       <span className="font-medium">Discount</span>
-//                       <span className="font-medium text-red-600">-₹{billDetails.bill.discountAmount.toFixed(2)}</span>
-//                     </div>
-//                   )}
-//                   <div className="flex justify-between px-6 py-4 bg-blue-50 text-lg font-bold">
-//                     <span>GRAND TOTAL</span>
-//                     <span>₹{billDetails.bill.totalAmount.toFixed(2)}</span>
+//                         {dateFormatter(billDetails.bill.date)}
+//                       </span>
+//                     </p>
 //                   </div>
 //                 </div>
-//               </div>
 
-//               {/* Footer */}
-//               <div className="border-t pt-6 text-center text-sm text-gray-600">
-//                 <p className="font-semibold mb-2">Thank you for your business!</p>
-//                 <p>Full payment is due upon receipt. Late payments may incur additional charges.</p>
-//               </div>
-//             </>
-//           )}
+//                 {/* Bill To */}
+//                 <div className="mb-8 p-5 rounded-lg border">
+//                   <h3 className="font-semibold text-lg mb-2">Bill To:</h3>
+//                   <p className="font-medium">{billDetails?.bill?.patient?.patientName}</p>
+//                   <p className="text-gray-700">{billDetails?.bill?.patient?.patientAddress}</p>
+//                   <p className="text-muted-foreground">Mobile No: {billDetails?.bill?.patient?.patientMobileNumber}</p>
+//                 </div>
 
-//           {!isLoading && !billDetails && (
-//             <div className="text-center py-20 text-red-500">
-//               <p className="text-xl">Failed to load invoice. Please try again.</p>
-//             </div>
-//           )}
+//                 {/* Items Table */}
+//                 <table className="w-full mb-8 border-collapse text-sm">
+//                   <thead>
+//                     <tr className="">
+//                       <th className="border border-gray-300 px-4 py-3 text-left">#</th>
+//                       <th className="border border-gray-300 px-4 py-3 text-left">Item</th>
+//                       <th className="border border-gray-300 px-4 py-3 text-center">Qty</th>
+//                       <th className="border border-gray-300 px-4 py-3 text-right">Price</th>
+//                       <th className="border border-gray-300 px-4 py-3 text-center">GST %</th>
+//                       <th className="border border-gray-300 px-4 py-3 text-right font-semibold">
+//                         Total
+//                       </th>
+//                     </tr>
+//                   </thead>
+//                   <tbody>
+//                     {billDetails.bill.items.map((item, index) => (
+//                       <InvoiceTableRow key={index} item={item} index={index} />
+//                     ))}
+//                   </tbody>
+//                 </table>
+
+//                 {/* Totals */}
+//                 <div className="flex justify-end mb-8">
+//                   <div className="w-full max-w-md border rounded-lg overflow-hidden">
+//                     {billDetails.bill.discountAmount > 0 && (
+//                       <div className="flex justify-between px-6 py-3 bg-red-50">
+//                         <span className="font-medium">Discount</span>
+//                         <span className="font-medium text-red-600">
+//                           -₹{billDetails.bill.discountAmount.toFixed(2)}
+//                         </span>
+//                       </div>
+//                     )}
+//                     <div className="flex justify-between px-6 py-4 text-lg font-bold">
+//                       <span>GRAND TOTAL</span>
+//                       <span>₹{billDetails.bill.totalAmount.toFixed(2)}</span>
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Footer */}
+//                 <div className="border-t pt-6 text-center text-sm text-gray-600">
+//                   <p className="font-semibold mb-2">Thank you for your business!</p>
+//                   <p>Full payment is due upon receipt. Late payments may incur additional charges.</p>
+//                 </div>
+//               </>
+//             )}
+
+//             {!isLoading && !billDetails && (
+//               <div className="text-center py-20 text-red-500">
+//                 <p className="text-xl">Failed to load invoice. Please try again.</p>
+//               </div>
+//             )}
+//           </div>
 //         </div>
 
-//         {/* Footer Buttons */}
-//         <AlertDialogFooter className="p-6 border-t bg-gray-50">
-//           <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+//         <AlertDialogFooter className="p-6 border-t  shrink-0">
+//           <Button variant="outline" className="cursor-pointer" onClick={() => close && close()}>
 //             Close
 //           </Button>
 //           <Button
 //             onClick={handleDownloadPDF}
 //             disabled={isDownloading || isLoading || !billDetails}
-//             className="bg-blue-600 hover:bg-blue-700 text-white"
+//             className=" text-white cursor-pointer"
 //           >
 //             {isDownloading ? (
 //               <>
@@ -288,15 +303,9 @@
 //       </AlertDialogContent>
 //     </AlertDialog>
 //   );
-// };
+// });
 
-
-
-
-
-
-
-
+// DownloadInvoice.displayName = "DownloadInvoice";
 
 
 
@@ -314,13 +323,14 @@
 
 
 // download-invoice.tsx
+"use client";
+
 import {
   AlertDialog,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { getInvoiceDetails } from "@/services/patient-bills";
@@ -328,27 +338,21 @@ import { dateFormatter } from "@/utils/constants";
 import { useEffect, useState, useCallback, memo } from "react";
 import html2canvas from "html2canvas-pro";
 import jsPDF from "jspdf";
-import { Loader2, Download } from "lucide-react";
+import { Loader2, Download, X } from "lucide-react";
+import type { Patient, Product } from "@/types/new-sale-entry";
 
 // === Types ===
-interface Item {
-  item: string;
-  quantity: number;
-  sellingPrice: number;
-  cgst: number;
-  sgst: number;
-  locker?: string;
-}
-
 interface Bill {
   _id: string;
-  customerName: string;
-  customerAddress: string;
-  mobileNumber: string;
+  invoiceNo?: string;
+  customerName?: string;
+  customerAddress?: string;
+  mobileNumber?: string;
   date: string;
   discountAmount: number;
   totalAmount: number;
-  items: Item[];
+  items: Product[];
+  patient?: Patient;
 }
 
 interface Enterprise {
@@ -356,6 +360,7 @@ interface Enterprise {
   address: string;
   mobileNumber: string;
   email: string;
+  gstNumber?: string;
 }
 
 interface InvoiceDetails {
@@ -365,32 +370,60 @@ interface InvoiceDetails {
 
 interface DownloadInvoiceProps {
   id: string;
+  open?: boolean;
+  close?: () => void;
   children?: React.ReactNode;
 }
 
 // Memoized table row component
-const InvoiceTableRow = memo(({ item, index }: { item: Item; index: number }) => {
-  const total = item.quantity * item.sellingPrice;
+const InvoiceTableRow = memo(({ item, index }: { item: Product; index: number }) => {
+  const quantity = Number(item?.quantity || 0);
+  const price = Number(item?.sellingPrice || 0);
+  const total = quantity * price;
   const gstPercent = (Number(item.cgst) || 0) + (Number(item.sgst) || 0);
 
   return (
-    <tr className="hover:bg-gray-50">
-      <td className="border border-gray-300 px-4 py-3">{index + 1}</td>
-      <td className="border border-gray-300 px-4 py-3">{item.item}</td>
-      <td className="border border-gray-300 px-4 py-3 text-center">{item.quantity}</td>
-      <td className="border border-gray-300 px-4 py-3 text-right">₹{item.sellingPrice.toFixed(2)}</td>
-      <td className="border border-gray-300 px-4 py-3 text-center">{gstPercent}%</td>
-      <td className="border border-gray-300 px-4 py-3 text-right font-medium">₹{total.toFixed(2)}</td>
+    <tr className="border-b last:border-b-0">
+      <td className="px-4 py-3 text-left">{index + 1}</td>
+      <td className="px-4 py-3 text-left font-medium">{item.name}</td>
+      <td className="px-4 py-3 text-center">
+        {quantity} {item.unit?.baseUnit || ""}
+      </td>
+      <td className="px-4 py-3 text-right">₹{price.toFixed(2)}</td>
+      <td className="px-4 py-3 text-center">{gstPercent}%</td>
+      <td className="px-4 py-3 text-right font-semibold">₹{total.toFixed(2)}</td>
     </tr>
   );
 });
 
 InvoiceTableRow.displayName = "InvoiceTableRow";
 
-export const DownloadInvoice = memo(({ id, children }: DownloadInvoiceProps) => {
+// Loading skeleton
+const InvoiceLoadingSkeleton = memo(() => (
+  <div className="flex flex-col items-center justify-center h-96">
+    <Loader2 className="w-12 h-12 animate-spin text-blue-600" />
+    <p className="mt-4 text-lg text-gray-600">Loading invoice details...</p>
+  </div>
+));
+
+InvoiceLoadingSkeleton.displayName = "InvoiceLoadingSkeleton";
+
+// Error state
+const InvoiceError = memo(() => (
+  <div className="text-center py-20">
+    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
+      <X className="w-8 h-8 text-red-600" />
+    </div>
+    <p className="text-xl text-red-600 font-semibold">Failed to load invoice</p>
+    <p className="text-sm text-gray-500 mt-2">Please try again or contact support</p>
+  </div>
+));
+
+InvoiceError.displayName = "InvoiceError";
+
+export const DownloadInvoice = memo(({ id, open, close, children }: DownloadInvoiceProps) => {
   const [billDetails, setBillDetails] = useState<InvoiceDetails | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
   const fetchInvoice = useCallback(async () => {
@@ -409,19 +442,19 @@ export const DownloadInvoice = memo(({ id, children }: DownloadInvoiceProps) => 
   }, [id]);
 
   useEffect(() => {
-    if (isDialogOpen) {
+    if (open) {
       fetchInvoice();
     } else {
       setBillDetails(null);
     }
-  }, [isDialogOpen, fetchInvoice]);
+  }, [open, fetchInvoice]);
 
   const handleDownloadPDF = useCallback(async () => {
     if (!billDetails) return;
 
     setIsDownloading(true);
 
-    // Wait for DOM to render
+    // Wait for DOM to render completely
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     const element = document.getElementById("print-area");
@@ -451,9 +484,11 @@ export const DownloadInvoice = memo(({ id, children }: DownloadInvoiceProps) => 
       let heightLeft = imgHeight;
       let position = 0;
 
+      // Add first page
       pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
       heightLeft -= pdfHeight;
 
+      // Add additional pages if needed
       while (heightLeft >= 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
@@ -461,7 +496,8 @@ export const DownloadInvoice = memo(({ id, children }: DownloadInvoiceProps) => 
         heightLeft -= pdfHeight;
       }
 
-      pdf.save(`Invoice_${billDetails.bill._id}.pdf`);
+      const fileName = `Invoice_${billDetails.bill.invoiceNo || billDetails.bill._id}.pdf`;
+      pdf.save(fileName);
     } catch (err) {
       console.error("PDF generation failed:", err);
       alert("Failed to generate PDF. Please try again.");
@@ -470,131 +506,190 @@ export const DownloadInvoice = memo(({ id, children }: DownloadInvoiceProps) => 
     }
   }, [billDetails]);
 
-  return (
-    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <AlertDialogTrigger asChild>
-        {children || (
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <Download className="h-4 w-4" />
-          </Button>
-        )}
-      </AlertDialogTrigger>
+  const handleClose = useCallback(() => {
+    if (!isDownloading) {
+      close?.();
+    }
+  }, [close, isDownloading]);
 
-      <AlertDialogContent className="min-w-[90vw] max-h-[90vh] p-0 flex flex-col overflow-hidden">
-        <AlertDialogHeader className="p-6 border-b bg-gray-50 shrink-0">
-          <AlertDialogTitle className="text-2xl font-bold text-gray-900">
-            Invoice Preview
-          </AlertDialogTitle>
+  // Calculate totals
+  const subtotal = billDetails?.bill.items.reduce(
+    (sum, item) => sum + Number(item.quantity || 0) * Number(item.sellingPrice || 0),
+    0
+  ) || 0;
+
+  const discount = billDetails?.bill.discountAmount || 0;
+  const grandTotal = billDetails?.bill.totalAmount || 0;
+
+  return (
+    <AlertDialog open={open} onOpenChange={handleClose}>
+      <AlertDialogContent className="min-w-[90vw] max-w-[95vw] max-h-[95vh] p-0 flex flex-col overflow-hidden bg-white text-black">
+        {/* Header */}
+        <AlertDialogHeader className="p-6 border-b shrink-0 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="flex items-center justify-between">
+            <AlertDialogTitle className="text-2xl font-bold text-gray-900">
+              Invoice Preview
+            </AlertDialogTitle>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleClose}
+              disabled={isDownloading}
+              className="h-8 w-8"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
         </AlertDialogHeader>
 
-        <div className="flex-1 overflow-auto">
-          <div id="print-area" className="bg-white text-gray-800 p-10">
-            {isLoading && (
-              <div className="flex flex-col items-center justify-center h-96">
-                <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
-                <p className="mt-4 text-lg">Loading invoice details...</p>
-              </div>
-            )}
+        {/* Content */}
+        <div className="flex-1 overflow-auto bg-gray-50">
+          <div id="print-area" className="bg-white p-10 max-w-[210mm] mx-auto my-6 shadow-lg">
+            {isLoading && <InvoiceLoadingSkeleton />}
+
+            {!isLoading && !billDetails && <InvoiceError />}
 
             {!isLoading && billDetails && (
               <>
-                {/* Header */}
-                <div className="flex justify-between items-start mb-8 border-b pb-6">
-                  <div>
-                    <h1 className="text-3xl font-bold text-blue-700">
+                {/* Invoice Header */}
+                <div className="flex justify-between items-start mb-8 pb-6 border-b-2 border-gray-300">
+                  <div className="flex-1">
+                    <h1 className="text-3xl font-bold text-blue-700 mb-2">
                       {billDetails.enterprise.name}
                     </h1>
-                    <p className="text-sm text-gray-600 mt-2">
+                    <p className="text-sm text-gray-600 leading-relaxed">
                       {billDetails.enterprise.address}
                     </p>
-                    <p className="text-sm text-gray-600">
-                      Email: {billDetails.enterprise.email} | Phone:{" "}
-                      {billDetails.enterprise.mobileNumber}
+                    <p className="text-sm text-gray-600 mt-1">
+                      <span className="font-medium">Email:</span> {billDetails.enterprise.email}
                     </p>
+                    <p className="text-sm text-gray-600">
+                      <span className="font-medium">Phone:</span> {billDetails.enterprise.mobileNumber}
+                    </p>
+                    {billDetails.enterprise.gstNumber && (
+                      <p className="text-sm text-gray-600">
+                        <span className="font-medium">GST No:</span> {billDetails.enterprise.gstNumber}
+                      </p>
+                    )}
                   </div>
                   <div className="text-right">
-                    <h2 className="text-4xl font-bold text-gray-900">INVOICE</h2>
-                    <p className="text-sm mt-3">
-                      <span className="font-semibold">Invoice #:</span> {billDetails.bill._id}
-                    </p>
-                    <p className="text-sm">
-                      <span className="font-semibold">Date:</span>{" "}
-                      {dateFormatter(billDetails.bill.date)}
-                    </p>
+                    <h2 className="text-3xl font-bold">INVOICE</h2>
+                     
+                    <div className="text-sm space-y-1">
+                      <p>
+                        <span className="font-semibold text-gray-700">Invoice #:</span>{" "}
+                        <span className="text-gray-900">
+                          {billDetails.bill.invoiceNo || billDetails.bill._id}
+                        </span>
+                      </p>
+                      <p>
+                        <span className="font-semibold text-gray-700">Date:</span>{" "}
+                        <span className="text-gray-900">{dateFormatter(billDetails.bill.date)}</span>
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Bill To */}
-                <div className="mb-8 p-5 bg-gray-50 rounded-lg border">
-                  <h3 className="font-semibold text-lg mb-2">Bill To:</h3>
-                  <p className="font-medium">{billDetails.bill.customerName}</p>
-                  <p className="text-gray-700">{billDetails.bill.customerAddress}</p>
-                  <p className="text-gray-700">Phone: {billDetails.bill.mobileNumber}</p>
+                {/* Bill To Section */}
+                <div className="mb-8 p-5 bg-blue-50 rounded-lg border border-blue-200">
+                  <h3 className="font-semibold text-lg mb-3 text-blue-900">Bill To:</h3>
+                  <div className="space-y-1">
+                    <p className="font-semibold text-gray-900">
+                      {billDetails.bill.patient?.patientName || billDetails.bill.customerName || "N/A"}
+                    </p>
+                    <p className="text-gray-700 text-sm">
+                      {billDetails.bill.patient?.patientAddress || billDetails.bill.customerAddress || ""}
+                    </p>
+                    <p className="text-gray-700 text-sm">
+                      <span className="font-medium">Mobile:</span>{" "}
+                      {billDetails.bill.patient?.patientMobileNumber ||
+                        billDetails.bill.mobileNumber ||
+                        "N/A"}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Items Table */}
-                <table className="w-full mb-8 border-collapse text-sm">
-                  <thead>
-                    <tr className="bg-gray-100">
-                      <th className="border border-gray-300 px-4 py-3 text-left">#</th>
-                      <th className="border border-gray-300 px-4 py-3 text-left">Item</th>
-                      <th className="border border-gray-300 px-4 py-3 text-center">Qty</th>
-                      <th className="border border-gray-300 px-4 py-3 text-right">Price</th>
-                      <th className="border border-gray-300 px-4 py-3 text-center">GST %</th>
-                      <th className="border border-gray-300 px-4 py-3 text-right font-semibold">
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {billDetails.bill.items.map((item, index) => (
-                      <InvoiceTableRow key={index} item={item} index={index} />
-                    ))}
-                  </tbody>
-                </table>
+                <div className="mb-8 border border-gray-300 rounded-lg overflow-hidden">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="bg-gray-100 border-b border-gray-300">
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700 w-12">#</th>
+                        <th className="px-4 py-3 text-left font-semibold text-gray-700">Item Description</th>
+                        <th className="px-4 py-3 text-center font-semibold text-gray-700 w-24">Qty</th>
+                        <th className="px-4 py-3 text-right font-semibold text-gray-700 w-28">Price</th>
+                        <th className="px-4 py-3 text-center font-semibold text-gray-700 w-20">GST</th>
+                        <th className="px-4 py-3 text-right font-semibold text-gray-700 w-32">Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {billDetails.bill.items.map((item, index) => (
+                        <InvoiceTableRow key={item._id || index} item={item} index={index} />
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
-                {/* Totals */}
+                {/* Summary Section */}
                 <div className="flex justify-end mb-8">
-                  <div className="w-full max-w-md border border-gray-300 rounded-lg overflow-hidden">
-                    {billDetails.bill.discountAmount > 0 && (
-                      <div className="flex justify-between px-6 py-3 bg-red-50">
-                        <span className="font-medium">Discount</span>
-                        <span className="font-medium text-red-600">
-                          -₹{billDetails.bill.discountAmount.toFixed(2)}
-                        </span>
+                  <div className="w-full max-w-sm">
+                    <div className="bg-gray-50 border border-gray-300 rounded-lg overflow-hidden">
+                      {/* Subtotal */}
+                      <div className="flex justify-between px-6 py-3 border-b border-gray-200">
+                        <span className="font-medium text-gray-700">Subtotal:</span>
+                        <span className="font-semibold text-gray-900">₹{subtotal.toFixed(2)}</span>
                       </div>
-                    )}
-                    <div className="flex justify-between px-6 py-4 bg-blue-50 text-lg font-bold">
-                      <span>GRAND TOTAL</span>
-                      <span>₹{billDetails.bill.totalAmount.toFixed(2)}</span>
+
+                      {/* Discount */}
+                      {discount > 0 && (
+                        <div className="flex justify-between px-6 py-3 border-b border-gray-200 bg-red-50">
+                          <span className="font-medium text-gray-700">Discount:</span>
+                          <span className="font-semibold text-red-600">-₹{discount.toFixed(2)}</span>
+                        </div>
+                      )}
+
+                      {/* Grand Total */}
+                      <div className="flex justify-between px-6 py-4 bg-blue-700 text-white">
+                        <span className="font-bold text-lg">GRAND TOTAL:</span>
+                        <span className="font-bold text-lg">₹{grandTotal.toFixed(2)}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Footer */}
-                <div className="border-t pt-6 text-center text-sm text-gray-600">
-                  <p className="font-semibold mb-2">Thank you for your business!</p>
-                  <p>Full payment is due upon receipt. Late payments may incur additional charges.</p>
+                <div className="border-t-2 border-gray-300 pt-6 mt-8">
+                  <div className="text-center space-y-2">
+                    <p className="font-semibold text-gray-900 text-base">
+                      Thank you for your business!
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      Full payment is due upon receipt. Late payments may incur additional charges.
+                    </p>
+                    <p className="text-xs text-gray-500 mt-4">
+                      This is a computer-generated invoice and does not require a signature.
+                    </p>
+                  </div>
                 </div>
               </>
-            )}
-
-            {!isLoading && !billDetails && (
-              <div className="text-center py-20 text-red-500">
-                <p className="text-xl">Failed to load invoice. Please try again.</p>
-              </div>
             )}
           </div>
         </div>
 
+        {/* Footer Actions */}
         <AlertDialogFooter className="p-6 border-t bg-gray-50 shrink-0">
-          <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+          <Button
+            variant="outline"
+            onClick={handleClose}
+            disabled={isDownloading}
+            className="min-w-[100px]"
+          >
             Close
           </Button>
           <Button
             onClick={handleDownloadPDF}
             disabled={isDownloading || isLoading || !billDetails}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 hover:bg-blue-700 text-white min-w-[150px]"
           >
             {isDownloading ? (
               <>

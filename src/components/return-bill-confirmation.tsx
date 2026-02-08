@@ -6,10 +6,8 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+  AlertDialogTitle, 
+} from "@/components/ui/alert-dialog"; 
 import { returnBillItems } from "@/services/patient-bills";
 import { getClientSideCookie } from "@/utils/client-side-cookies";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,16 +15,16 @@ import { toast } from "sonner";
 
 interface ReturnDialogProps {
   bill: any;
-  invalidateType: string;
-  label: string;
-  onOpenChange?: (open: boolean) => void;
+  invalidateType: string; 
+  close?: (open: boolean) => void;
+  open?: boolean;
 }
 
 export function ReturnConfirmationDialog({
   bill,
-  invalidateType,
-  label,
-  onOpenChange
+  invalidateType, 
+  close,
+  open
 }: // onConfirm,
 ReturnDialogProps) {
   const queryClient = useQueryClient();
@@ -54,22 +52,11 @@ ReturnDialogProps) {
       toast.error(error.message);
     },
   });
-
-  const isReturnBill = bill?.items?.every((i: any) => i.isReturn);
+ 
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          variant="destructive"
-          disabled={isReturnBill}
-          className="w-full"
-          onClick={() => onOpenChange?.(true)}
-        >
-          {label}
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
+    <AlertDialog open={open} onOpenChange={close}>       
+      <AlertDialogContent>s
         <AlertDialogHeader>
           <AlertDialogTitle>Confirm Return</AlertDialogTitle>
           <AlertDialogDescription>

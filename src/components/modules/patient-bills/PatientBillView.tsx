@@ -85,8 +85,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DateRangePickerModal } from "../../date-range";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import type { DateRange } from "./types";
+import { Button } from "@/components/ui/button"; 
+import { DateRange } from "@/types/patien-bills";
 
 interface PatientBillViewProps {
   enterpriseId: string;

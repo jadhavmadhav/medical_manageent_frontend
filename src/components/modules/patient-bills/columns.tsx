@@ -21,6 +21,7 @@ import { PatientBill } from "@/types/patien-bills";
 import { Product } from "@/types/new-sale-entry";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ActionsCell } from "./actionsCell";
 
 
 export const columns: ColumnDef<PatientBill>[] = [
@@ -104,67 +105,7 @@ export const columns: ColumnDef<PatientBill>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }: { row: any }) => {
-      const bill = row.original;
-      const isReturnBill = bill.items.every((item: Product) => item.isReturn);
-      const [isOpen, setIsOpen] = useState(false);
-      const router = useRouter();
-      const handleEdit = useCallback(() => {
-        setIsOpen(false);
-        router.push(`/new-sale-entry?id=${bill._id}`);
-      }, [router, bill._id]);
-      return (
-        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-[160px]">
-            <ViewBill bill={bill}>
-              <DropdownMenuItem onSelect={(e) => {
-                e.preventDefault();
-                setIsOpen(false);
-              }}>
-                <Eye className="mr-2 h-4 w-4" />
-                View Bill
-              </DropdownMenuItem>
-            </ViewBill>
-
-            <DownloadInvoice id={bill._id}>
-              <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsOpen(false); }}>
-                <Download className="mr-2 h-4 w-4" />
-                Download
-              </DropdownMenuItem>
-            </DownloadInvoice>
-
-            <DropdownMenuItem
-              onClick={handleEdit}
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Bill
-            </DropdownMenuItem>
-
-            <DropdownMenuSeparator />
-
-            <ReturnConfirmationDialog
-              bill={bill}
-              invalidateType="patientBills"
-              label="Return Bill"
-            />
-            <ReturnConfirmationDialog
-              bill={bill}
-              invalidateType="patientBills"
-              label={isReturnBill ? "Returned" : "Return"}
-              onOpenChange={() => setIsOpen(false)}
-            />
-
-
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <ActionsCell bill={row.original} />,
   }
   // {
   //   id: "actions",
@@ -172,9 +113,14 @@ export const columns: ColumnDef<PatientBill>[] = [
   //   cell: ({ row }: { row: any }) => {
   //     const bill = row.original;
   //     const isReturnBill = bill.items.every((item: Product) => item.isReturn);
-
+  //     const [isOpen, setIsOpen] = useState(false);
+  //     const router = useRouter();
+  //     const handleEdit = useCallback(() => {
+  //       setIsOpen(false);
+  //       router.push(`/new-sale-entry?id=${bill._id}`);
+  //     }, [router, bill._id]);
   //     return (
-  //       <DropdownMenu>
+  //       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
   //         <DropdownMenuTrigger asChild>
   //           <Button variant="ghost" className="h-8 w-8 p-0">
   //             <span className="sr-only">Open menu</span>
@@ -182,21 +128,28 @@ export const columns: ColumnDef<PatientBill>[] = [
   //           </Button>
   //         </DropdownMenuTrigger>
   //         <DropdownMenuContent align="end" className="w-[160px]">
-  //           <ViewBill bill={bill} />
+  //           <ViewBill bill={bill}>
+  //             <DropdownMenuItem onSelect={(e) => {
+  //               e.preventDefault();
+  //               setIsOpen(false);
+  //             }}>
+  //               <Eye className="mr-2 h-4 w-4" />
+  //               View Bill
+  //             </DropdownMenuItem>
+  //           </ViewBill>
 
-  //           <DropdownMenuSeparator />
-
-  //           <DownloadInvoice id={bill._id!} />
-
-  //           <DropdownMenuSeparator />
+  //           <DownloadInvoice id={bill._id}>
+  //             <DropdownMenuItem onSelect={(e) => { e.preventDefault(); setIsOpen(false); }}>
+  //               <Download className="mr-2 h-4 w-4" />
+  //               Download
+  //             </DropdownMenuItem>
+  //           </DownloadInvoice>
 
   //           <DropdownMenuItem
-  //             onClick={() => {
-  //               window.location.href = `/new-sale-entry?id=${bill._id}`;
-  //             }}
+  //             onClick={handleEdit}
   //           >
-  //             <Edit className="mr-2 h-4 w-full" />
-  //             Edit
+  //             <Edit className="mr-2 h-4 w-4" />
+  //             Edit Bill
   //           </DropdownMenuItem>
 
   //           <DropdownMenuSeparator />
@@ -204,12 +157,20 @@ export const columns: ColumnDef<PatientBill>[] = [
   //           <ReturnConfirmationDialog
   //             bill={bill}
   //             invalidateType="patientBills"
-  //             label={isReturnBill ? "Returned" : "Return"}
+  //             label="Return Bill"
   //           />
+  //           <ReturnConfirmationDialog
+  //             bill={bill}
+  //             invalidateType="patientBills"
+  //             label={isReturnBill ? "Returned" : "Return"}
+  //             onOpenChange={() => setIsOpen(false)}
+  //           />
+
 
   //         </DropdownMenuContent>
   //       </DropdownMenu>
   //     );
   //   },
-  // },
+  // }
+
 ];

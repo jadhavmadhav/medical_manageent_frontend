@@ -25,7 +25,7 @@ export default function PrivateLayout({ children }: { children: ReactNode }) {
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset className="flex flex-col h-screen w-full overflow-hidden">
-          <header className="flex h-16 shrink-0 items-center bg-primary">
+          <header className="flex h-16 shrink-0 items-center">
             <div className="flex items-center gap-2 px-4 w-full">
               <SidebarTrigger className="-ml-1" />
 

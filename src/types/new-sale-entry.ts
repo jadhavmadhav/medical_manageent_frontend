@@ -72,7 +72,7 @@ export interface Doctor {
 
 export interface Product {
   _id: string;
-  item: string;
+  name: string;
   cgst: string;
   sgst: string;
   buyingPrice: number;
@@ -90,9 +90,13 @@ export interface Product {
   highlightedIndex?: any;
   manufacturer?: string;
   pricing?: any;
-  stock?: any;
-  name: string;
+  stock?: any; 
   isReturn?: boolean;
+  quantity?: number;
+  unit:{
+    baseUnit: string;
+    subUnit: string; 
+  }
 }
 
 export interface BillItem {
