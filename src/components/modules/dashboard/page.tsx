@@ -12,15 +12,9 @@
 // import InventoryDistribution from "./sections/inventory-distribution";
 // import { useRouter } from "next/navigation";
 
-import InventoryManagementSection from "./components/InventoryManagementSection";
-import MedicalBillingSection from "./components/MedicalBillingSection";
-import QuickActions from "./components/QuickActions";
-import QuickStatsAlerts from "./components/QuickStatsAlerts";
-import RecentActivity from "./components/RecentActivity";
-import RevenueOverview from "./components/RevenueOverview";
-import TopBar from "./components/TopBar";
 
- 
+
+
 
 // const DashboardView = ({ enterpriseId }: { enterpriseId: string }) => {
 //  const router= useRouter()
@@ -107,21 +101,26 @@ import TopBar from "./components/TopBar";
 
 
 
+import InventoryManagementSection from "./components/InventoryManagementSection";
+import QuickActions from "./components/QuickActions";
+import QuickStatsAlerts from "./components/QuickStatsAlerts";
+import RecentActivity from "./components/RecentActivity";
+import RevenueOverview from "./components/RevenueOverview";
+import TopBar from "./components/TopBar";
 
 
 
 
- 
 
 export default function DashboardPage({ enterpriseId }: { enterpriseId: string }) {
   return (
     <div className="flex min-h-screen">
-     
-      
+
+
       {/* Main Content */}
       <div className="flex-1 flex flex-col">
-     
-        
+
+
         {/* Main Content Area */}
         <main className="flex-1 p-4 md:p-6 overflow-y-auto">
           {/* Header */}
@@ -129,7 +128,7 @@ export default function DashboardPage({ enterpriseId }: { enterpriseId: string }
             <h1 className="text-2xl font-bold">Dashboard Overview</h1>
             <p className="text-muted-foreground">Welcome back, Dr. Johnson. Here&apos;s what&apos;s happening today.</p>
           </div>
-          
+
           {/* Quick Stats and Revenue */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
             <div className="lg:col-span-1">
@@ -139,21 +138,17 @@ export default function DashboardPage({ enterpriseId }: { enterpriseId: string }
               <RevenueOverview />
             </div>
           </div>
-          
+
           {/* Medical Billing and Inventory Sections */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <MedicalBillingSection />
+
             <InventoryManagementSection />
+            <RecentActivity />
           </div>
-          
+
           {/* Quick Actions and Recent Activity */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2">
-              <QuickActions />
-            </div>
-            <div className="lg:col-span-1">
-              <RecentActivity />
-            </div>
+            <QuickActions />
           </div>
         </main>
       </div>

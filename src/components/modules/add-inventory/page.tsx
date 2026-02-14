@@ -41,6 +41,10 @@ export default function InventoryPage({
     },
     onSuccess: (data) => {
       console.log("success", data);
+      toast.success("Inventory saved successfully");
+      setBulkData([]);
+      setManualData([]);
+      setVendorDialogOpen(false);
     },
   });
 
@@ -57,17 +61,8 @@ export default function InventoryPage({
         purchaseDate: vendorData?.purchaseDate,
         paymentMethod: vendorData?.paymentMethod,
         paymentStatus: vendorData?.paymentStatus,
-        // inventories: dataToSave?.map((item) => {
-        //   const transformed: Record<string, any> = {};
-        //   extraFieldsForProduct?.forEach((field) => {
-        //     transformed[field.key] =
-        //       field.type === "date" && item[field.label]
-        //         ? new Date(item[field.label]).toISOString()
-        //         : item[field.label] ?? null;
-        //   });
-        //   return transformed;
-        // }),
-        inventories: dataToSave?.map((item) => {
+        
+        items: dataToSave?.map((item) => {
           const transformed: Record<string, any> = {};
 
           // 1. Handle configured extra fields
@@ -92,8 +87,8 @@ export default function InventoryPage({
           // 3. Build displayItem safely
 
           const itemName = transformed["item"] ?? item["item"]
-          const size = transformed["Unit"].baseUnitSize ?? item["Unit"].baseUnitSize
-          const unit = transformed["Unit"].label ?? item["Unit"].label
+          const size = transformed["unit"].baseUnitSize ?? item["unit"].baseUnitSize
+          const unit = transformed["unit"].label ?? item["unit"].label
 
           transformed["displayItem"] = `${itemName} - ${size} ${unit}`;
 
@@ -106,10 +101,7 @@ export default function InventoryPage({
       console.log("Saving payload:", payload);
       await createNewPurchase(payload);
 
-      toast.success("Inventory saved successfully");
-      setBulkData([]);
-      setManualData([]);
-      setVendorDialogOpen(false);
+
     } catch (error) {
       console.error("Save error:", error);
       toast.error("Failed to save inventory");
