@@ -6,9 +6,7 @@ import type {
   DiscountType,
   Patient,
   Doctor,
-  CreateBillPayload,
-  FetchedBill,
-  FetchedBillItem,
+  CreateBillPayload,  
 } from "../types";
 
 function uid() {
@@ -23,7 +21,7 @@ function uid() {
  * actually reads (sku, expiryDate, stock.fullPacks). The AddProductRow search
  * always fetches fresh inventory so the stub never hits the API.
  */
-function hydrateItem(item: FetchedBillItem): BillItem {
+function hydrateItem(item: BillItem): BillItem {
   return {
     ...item,
     _rowId: uid(),
@@ -55,7 +53,7 @@ function hydrateItem(item: FetchedBillItem): BillItem {
 interface UseBillFormOptions {
   enterpriseId: string;
   /** Provide when editing — pre-populates all form state from the fetched bill */
-  initialData?: FetchedBill;
+  initialData?: any;
 }
 
 export function useBillForm({ enterpriseId, initialData }: UseBillFormOptions) {

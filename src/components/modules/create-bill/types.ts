@@ -42,6 +42,8 @@ export interface Product {
   unit: ProductUnit;
   pricing: ProductPricing;
   stock: ProductStock;
+  availableLabel?: string;
+  maxQty?: string | number;
   schedule: string | null; // "H" | "H1" | "X" | null
 }
 

@@ -93,7 +93,7 @@ const NewSaleEntryView = ({
   // Queries
   const { data: inventories = [] } = useQuery({
     queryKey: ["inventories", enterpriseId],
-    queryFn: () => getAllInventories({ enterpriseId }),
+    queryFn: () => getAllInventories({ enterpriseId, search: "" }),
     enabled: !!enterpriseId,
     select: selectResultOrEmpty, // Using stable selector
   });

@@ -1,7 +1,7 @@
 "use client";
 
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Info, FileSpreadsheet } from "lucide-react";  
+import { Info, FileSpreadsheet } from "lucide-react";
 import DataTable from "./DataTable";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
@@ -74,7 +74,13 @@ const ImportDataTable = memo(({ extraFieldsForProduct, data, setData }: ImportDa
           }
         };
         reader.onerror = () => { toast.error("Failed to read file"); reject(); };
-        type === "csv" ? reader.readAsText(file) : reader.readAsArrayBuffer(file);
+        // type === "csv" ? reader.readAsText(file) : reader.readAsArrayBuffer(file);
+        if (type === "csv") {
+          reader.readAsText(file);
+        } else {
+          reader.readAsArrayBuffer(file);
+        }
+
       });
     },
     [extraFieldsForProduct, setData, parseExcelDate]

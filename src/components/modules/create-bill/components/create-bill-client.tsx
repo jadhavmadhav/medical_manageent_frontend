@@ -50,7 +50,7 @@ export function CreateBillClient({ enterpriseId, bill_id }: CreateBillClientProp
     mutationFn: createNewBill,
     onSuccess: (data) => {
       toast.success(data?.message ?? "Bill created successfully!");
-      router.back();
+      router.push("/patient-bills")
     },
     onError: (error: Error) => {
       toast.error(error.message ?? "Failed to create bill.");

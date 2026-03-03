@@ -53,7 +53,7 @@ const VendorSelectionDialog = ({
   // Fetch vendors
   const { data: vendorsData, isLoading: isLoadingVendors } = useQuery({
     queryKey: ["vendors", enterpriseId],
-    queryFn: () => getAllVendors({ enterpriseId }),
+    queryFn: () => getAllVendors({ enterpriseId, search:"" }),
     enabled: !!enterpriseId && open,
   });
 

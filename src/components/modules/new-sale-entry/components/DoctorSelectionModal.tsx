@@ -66,7 +66,7 @@ const DoctorSelectionModal = React.memo(
         enterpriseId,
         search: debouncedSearch,
       });
-    }, [debouncedSearch, enterpriseId, searchDoctorsMutate]);
+    }, [debouncedSearch, enterpriseId, searchDoctorsMutate, doctorModalOpen]);
 
     // Reset on close 
     useEffect(() => {

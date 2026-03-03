@@ -1,11 +1,11 @@
 export interface createDoctorPayload {
   enterpriseId: string;
-  name: string;
+  doctorName: string;
   specialization?: string;
   doctorMobileNumber: string;
   email?: string;
   hospital?: string;
-  address: string;
+  doctorAddress: string;
 }
 
 export interface createDoctorResponse {

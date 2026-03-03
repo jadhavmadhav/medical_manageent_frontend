@@ -127,7 +127,7 @@ export default function ReportsView() {
   const ITEMS_PER_PAGE = 20;
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const tableConfig: ReportConfig[] = enterprise?.reportConfigurations || [];
+  const tableConfig = enterprise?.reportConfigurations || [];
 
   useEffect(() => {
     if (tableConfig.length > 0 && !selectedReport) {
@@ -143,8 +143,8 @@ export default function ReportsView() {
   const columns = useMemo(() => {
     if (!currentConfig?.configColumns) return [];
     return currentConfig.configColumns
-      .filter((col) => col.value === true)
-      .sort((a, b) => a.position - b.position);
+      .filter((col: any) => col.value === true)
+      .sort((a: any, b: any) => a.position - b.position);
   }, [currentConfig]);
 
 

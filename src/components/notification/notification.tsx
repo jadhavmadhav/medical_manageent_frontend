@@ -1,4 +1,4 @@
- "use client";
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import {
@@ -271,7 +271,7 @@ const NotificationView = () => {
   const createObserver = (id: number) => {
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        entries.forEach((entry: any) => {
           if (entry.isIntersecting) {
             // Mark as read when notification enters viewport
             const notification = notifications.find((n) => n.id === id);
@@ -337,7 +337,7 @@ const NotificationView = () => {
     setNotifications((prevNotifications) =>
       prevNotifications.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
-    
+
     // Cleanup observer after marking as read
     const observer = observerRefs.current.get(id);
     if (observer) {
@@ -439,7 +439,7 @@ const NotificationView = () => {
                       Notifications
                     </h1>
                     <p className="text-gray-600 mt-1 text-sm md:text-base">
-                      {unreadCount > 0 
+                      {unreadCount > 0
                         ? `You have ${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}`
                         : "You're all caught up!"
                       }
@@ -512,11 +512,10 @@ const NotificationView = () => {
                 <Card
                   key={notification.id}
                   ref={(el) => notificationRef(el, notification.id)}
-                  className={`border-0 shadow-md hover:shadow-xl transition-all duration-300 group ${
-                    !notification.read
+                  className={`border-0 shadow-md hover:shadow-xl transition-all duration-300 group ${!notification.read
                       ? "bg-gradient-to-r from-blue-50 via-purple-50/50 to-pink-50/30 ring-2 ring-blue-200/50"
                       : "backdrop-blur-sm"
-                  }`}
+                    }`}
                 >
                   <CardContent className="p-5">
                     <div className="flex gap-4">
@@ -543,7 +542,7 @@ const NotificationView = () => {
                           </div>
                           <div className="flex items-center gap-2">
                             <span className="text-xs text-gray-500 font-medium whitespace-nowrap">
-                              {notification.time}
+                              {/* {notification?.time} */}
                             </span>
                           </div>
                         </div>
@@ -555,25 +554,23 @@ const NotificationView = () => {
                         {/* Meta Information Cards */}
                         <div className="flex flex-wrap gap-2 mb-4">
                           {notification.amount && (
-                            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${
-                              notification.amountType === "credit" 
+                            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${notification.amountType === "credit"
                                 ? "bg-emerald-50 border border-emerald-200"
                                 : notification.amountType === "debit"
-                                ? "bg-red-50 border border-red-200"
-                                : "bg-orange-50 border border-orange-200"
-                            }`}>
+                                  ? "bg-red-50 border border-red-200"
+                                  : "bg-orange-50 border border-orange-200"
+                              }`}>
                               {notification.amountType === "credit" ? (
                                 <ArrowDownRight className="h-4 w-4 text-emerald-600" />
                               ) : (
                                 <ArrowUpRight className="h-4 w-4 text-red-600" />
                               )}
-                              <span className={`font-bold text-sm ${
-                                notification.amountType === "credit"
+                              <span className={`font-bold text-sm ${notification.amountType === "credit"
                                   ? "text-emerald-700"
                                   : notification.amountType === "debit"
-                                  ? "text-red-700"
-                                  : "text-orange-700"
-                              }`}>
+                                    ? "text-red-700"
+                                    : "text-orange-700"
+                                }`}>
                                 {notification.amount}
                               </span>
                             </div>
@@ -622,11 +619,10 @@ const NotificationView = () => {
                             size="sm"
                             variant="ghost"
                             onClick={() => toggleRead(notification.id)}
-                            className={`h-9 gap-2 text-sm font-medium text-muted-foreground transition-colors ${
-                              !notification.read
+                            className={`h-9 gap-2 text-sm font-medium text-muted-foreground transition-colors ${!notification.read
                                 ? "hover:bg-blue-50 hover:text-blue-700"
                                 : "hover:bg-orange-50 hover:text-orange-700"
-                            }`}
+                              }`}
                           >
                             <CheckCheck className="h-4 w-4" />
                             {!notification.read ? "Mark as read" : "Mark as unread"}
