@@ -340,7 +340,7 @@ const ProfileView = () => {
   const [openAvatar, setOpenAvatar] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: "Admin User",
+    name: "Madhav Jadhav",
     email: "admin@medtrax.in",
     mobile: "9876543210",
     role: "Administrator",

@@ -18,7 +18,7 @@ export interface Sale {
   schedule?: string;
   cost?: number;
   profit?: number;
-  unit?: { baseUnit: string };
+  unit?: { baseUnit: string; code: string; baseUnitSize: number; label: string };
 }
 
 export interface SalesResponse {

@@ -70,7 +70,7 @@ const InventoryView = ({ enterpriseId }: InventoryProps) => {
   return (
     <div className="flex flex-col h-full p-4">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Inventory</h1>
+        <h1 className="text-lg font-bold">Inventory</h1>
         <div className="flex items-center gap-2">
           <DateRangePickerModal
             onSelectRange={setDateRange}

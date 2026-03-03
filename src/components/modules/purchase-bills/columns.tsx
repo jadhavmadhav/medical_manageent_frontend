@@ -38,31 +38,31 @@ export const columns = [
       return PaymentStatusBadge(statusText);
     },
   },
-  {
-    accessorKey: "actions",
-    header: "Actions",
-    width: 250,
-    sortable: false,
-    cell: (params: any) => (
-      <div className="flex gap-2">
-        <Button
-          color="primary"
-          variant="outline"
-          //  onClick={() => navigate(`/purchase-bills/${params.row._id}`)}
-        >
-          View
-        </Button>
+  // {
+  //   accessorKey: "actions",
+  //   header: "Actions",
+  //   width: 250,
+  //   sortable: false,
+  //   cell: (params: any) => (
+  //     <div className="flex gap-2">
+  //       <Button
+  //         color="primary"
+  //         variant="outline"
+  //         //  onClick={() => navigate(`/purchase-bills/${params.row._id}`)}
+  //       >
+  //         View
+  //       </Button>
 
-        <Button
-        //   onClick={() => navigate(`/purchase-bills/edit/${params.row._id}`)}
-        >
-          Edit
-        </Button>
-        {/* <RiDeleteBin5Fill
-            className="text-xl cursor-pointer text-red-600 hover:text-red-800"
-            onClick={() => setDeletePrompt({ isOpen: true, billId: params.row._id })}
-          /> */}
-      </div>
-    ),
-  },
+  //       <Button
+  //       //   onClick={() => navigate(`/purchase-bills/edit/${params.row._id}`)}
+  //       >
+  //         Edit
+  //       </Button>
+  //       {/* <RiDeleteBin5Fill
+  //           className="text-xl cursor-pointer text-red-600 hover:text-red-800"
+  //           onClick={() => setDeletePrompt({ isOpen: true, billId: params.row._id })}
+  //         /> */}
+  //     </div>
+  //   ),
+  // },
 ];

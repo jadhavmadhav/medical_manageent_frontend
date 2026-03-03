@@ -47,23 +47,13 @@ import { ScrollArea } from "./ui/scroll-area";
 
 // Sample notification data
 const recentNotifications = [
-  {
-    id: 1,
-    type: "payment",
-    title: "Payment Received",
-    message: "Dr. Sharma paid ₹3,500",
-    time: "2 min ago",
-    icon: DollarSign,
-    color: "text-emerald-600",
-    bgColor: "bg-emerald-50",
-    read: false,
-  },
+  
   {
     id: 2,
     type: "stock",
     title: "Low Stock Alert",
     message: "Paracetamol - 50 tablets left",
-    time: "15 min ago",
+    // time: "15 min ago",
     icon: Package,
     color: "text-amber-600",
     bgColor: "bg-amber-50",
@@ -74,7 +64,7 @@ const recentNotifications = [
     type: "alert",
     title: "Medicine Expiry",
     message: "8 items expiring in 30 days",
-    time: "30 min ago",
+    // time: "30 min ago",
     icon: AlertCircle,
     color: "text-red-600",
     bgColor: "bg-red-50",
@@ -163,7 +153,7 @@ export const NavBar = () => {
 
   return (
     <>
-      <header className="sticky w-full top-0 z-10 border-b border-gray-200">
+      <header className="sticky w-full z-10">
         <div className="flex items-center justify-between px-6 py-3">
           {/* Left side: Search and Date */}
           <div className="flex items-center space-x-4">
@@ -208,7 +198,7 @@ export const NavBar = () => {
             {/* Notifications */}
 
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button className="relative p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg">
                   <Bell size={20} />
@@ -284,12 +274,12 @@ export const NavBar = () => {
                   View all notifications
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
             {/* User Profile */}
             <div className="flex items-center space-x-3 pl-3 border-l border-gray-200">
               <div className="hidden md:block text-right">
-                <p className="text-sm font-medium text-muted-foreground">Dr. Sarah Johnson</p>
+                <p className="text-sm font-medium text-muted-foreground">Madhav Jadhav</p>
                 <p className="text-xs text-muted-foreground">Admin User</p>
               </div>
 

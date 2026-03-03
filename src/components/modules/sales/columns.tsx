@@ -88,7 +88,7 @@ export const columns: ColumnDef<Sale>[] = [
     header: "Quantity",
     cell: ({ row, getValue }) => (
       <div className="capitalize w-[100px]">
-        {String(getValue())} {row.original.unit?.baseUnit}
+        {String(getValue())} {row.original?.unit?.code}
       </div>
     ),
   },

@@ -25,19 +25,19 @@ export default function PrivateLayout({ children }: { children: ReactNode }) {
       <SidebarProvider>
         <AppSidebar />
         <SidebarInset className="flex flex-col h-screen w-full overflow-hidden">
-          <header className="flex h-16 shrink-0 items-center">
-            <div className="flex items-center gap-2 px-4 w-full">
-              <SidebarTrigger className="-ml-1" />
+          <header className="flex h-17 shrink-0 items-center shadow-accent border-b bg-inherit ">
+            {/* <div className="flex items-center gap-2 px-0 w-full"> */}
+            {/* <SidebarTrigger className="-ml-1" /> */}
 
-              <Separator
+            {/* <Separator
                 orientation="vertical"
                 className="mr-2 data-[orientation=vertical]:h-4"
-              />
+              /> */}
 
-              <NavBar />
-            </div>
+            <NavBar />
+            {/* </div> */}
           </header>
-          <div className="flex flex-1 flex-col gap-4 p-4 pt-0 h-[100%] overflow-y-scroll">
+          <div className="flex flex-1 flex-col gap-4 h-[100%] overflow-y-scroll">
             {children}
           </div>
         </SidebarInset>

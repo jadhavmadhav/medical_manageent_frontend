@@ -94,6 +94,25 @@ const data = {
       url: "/new-purchase",
       icon: ShoppingCart,
     },
+     {
+      title: "Master",
+      icon: Boxes,
+      items: [
+        {
+          title: "Products",
+          url: "/master/products",
+        },
+        {
+          title: "Customers",
+          url: "/master/customers",
+        },
+        {
+          title: "Suppliers",
+          url: "/master/suppliers",
+        },
+      ],
+    },
+
     {
       title: "Reports",
       url: "/reports",
@@ -105,7 +124,7 @@ const data = {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="h-16 flex flex-row items-center gap-2 px-2 border-b   border-r-0">
+      <SidebarHeader className="h-17 flex flex-row items-center gap-2 px-2 border-b   border-r-0">
         {/* LOGO */}
         <div className="relative h-14 w-14 shrink-0 rounded-full overflow-hidden bg-white">
           <Image

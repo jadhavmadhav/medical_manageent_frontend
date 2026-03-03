@@ -42,9 +42,9 @@ const PurchaseBills = ({ enterpriseId }: { enterpriseId: string }) => {
   }
 
   return (
-    <div>
+    <div className="p-4">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Purchase Bill's</h1>
+        <h1 className="text-lg font-bold">Purchase Bill's</h1>
         <div className="flex items-center gap-2">
           <DateRangePickerModal
             onSelectRange={setDateRange}

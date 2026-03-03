@@ -199,7 +199,7 @@ export default function SalesList({ enterpriseId }: SalesListProps) {
   return (
     <div className="flex flex-col h-full p-4">
       <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Sales Dashboard</h1>
+        <h1 className="text-lg font-bold">Sales Dashboard</h1>
         <DateRangePickerModal onSelectRange={setDateRange} initialRange={dateRange} />
       </div>
       <div className="flex-1 overflow-auto bg-primary-50 border rounded-md">

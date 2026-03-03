@@ -241,90 +241,90 @@ const NewSaleEntryView = ({
 
   // Memoized handlers
   const addProductToBill = useCallback(
-  (product: any) => {
-    const sellingPrice = product.pricing?.sellingPerBaseUnit ?? 0;
-    const buyingPrice = product.pricing?.buyingPerBaseUnit ?? 0;
+    (product: any) => {
+      const sellingPrice = product.pricing?.sellingPerBaseUnit ?? 0;
+      const buyingPrice = product.pricing?.buyingPerBaseUnit ?? 0;
 
-    const existingIndex = billItems.findIndex(
-      (i) => i.inventoryId === product.inventoryId
-    );
+      const existingIndex = billItems.findIndex(
+        (i) => i.inventoryId === product.inventoryId
+      );
 
-    if (existingIndex >= 0) {
-      const updated = [...billItems];
-      const existing = updated[existingIndex];
+      if (existingIndex >= 0) {
+        const updated = [...billItems];
+        const existing = updated[existingIndex];
 
-      updated[existingIndex] = {
-        ...existing,
-        quantity: existing.quantity + 1,
-        total:
-          (existing.quantity + 1) *
-          (sellingPrice - existing.discount),
-      };
-      setBillItems(updated);
-    } else {
-      setBillItems([
-        {
-          inventoryId: product.inventoryId,
-          productId: product._id,
-          name: product.name,
-          batchNo: product.batchNo,
-          unit: product.unit,
-          sellingPrice,
-          buyingPrice,
-          discount: 0,
-          quantity: 1,
-          total: sellingPrice, 
-        },
-        ...billItems,
-      ]);
-    }
+        updated[existingIndex] = {
+          ...existing,
+          quantity: existing.quantity + 1,
+          total:
+            (existing.quantity + 1) *
+            (sellingPrice - existing.discount),
+        };
+        setBillItems(updated);
+      } else {
+        setBillItems([
+          {
+            inventoryId: product.inventoryId,
+            productId: product._id,
+            name: product.name,
+            batchNo: product.batchNo,
+            unit: product.unit,
+            sellingPrice,
+            buyingPrice,
+            discount: 0,
+            quantity: 1,
+            total: sellingPrice,
+          },
+          ...billItems,
+        ]);
+      }
 
-    setSearchTerm("");
-    setHighlightedIndex(-1);
-  },
-  [billItems]
-);
+      setSearchTerm("");
+      setHighlightedIndex(-1);
+    },
+    [billItems]
+  );
 
 
   const updateQuantity = useCallback(
-  (inventoryId: string, newQty: string) => {
-    const qty = Number(newQty);
-    if (isNaN(qty)) return;
+    (inventoryId: string, newQty: string) => {
+      const qty = Number(newQty);
+      if (isNaN(qty)) return;
 
-    setBillItems((items) =>
-      items.map((i) =>
-        i.inventoryId === inventoryId
-          ? {
+      setBillItems((items) =>
+        items.map((i) =>
+          i.inventoryId === inventoryId
+            ? {
               ...i,
               quantity: qty,
               total: qty * (i.sellingPrice - i.discount),
             }
-          : i
-      )
-    );
-  },
-  []
-);
+            : i
+        )
+      );
+    },
+    []
+  );
 
-const updateDiscount = useCallback(
-  (inventoryId: string, newDiscount: string) => {
-    const discount = Number(newDiscount);
-    if (isNaN(discount)) return;
+  const updateDiscount = useCallback(
+    (inventoryId: string, newDiscount: string) => {
+      const discount = Number(newDiscount);
+      if (isNaN(discount)) return;
 
-    setBillItems((items) =>
-      items.map((i) =>
-        i.inventoryId === inventoryId
-          ? {
+      setBillItems((items) =>
+        items.map((i) =>
+          i.inventoryId === inventoryId
+            ? {
               ...i,
               discount,
               total: i.quantity * (i.sellingPrice - discount),
             }
-          : i
-      )
-    );
-  },
-  []
-);
+            : i
+        )
+      );
+    },
+    []
+  );
 
 
   const removeItem = useCallback(
@@ -629,3 +629,4 @@ const updateDiscount = useCallback(
 };
 
 export default NewSaleEntryView;
+

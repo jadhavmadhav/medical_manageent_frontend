@@ -2,7 +2,7 @@ export interface createDoctorPayload {
   enterpriseId: string;
   name: string;
   specialization?: string;
-  mobile_number: string;
+  doctorMobileNumber: string;
   email?: string;
   hospital?: string;
   address: string;

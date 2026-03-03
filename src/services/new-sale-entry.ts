@@ -7,10 +7,10 @@ import {
 } from "@/types/new-sale-entry";
 import { apiRequestWithAuth } from "@/utils/axios";
 
-export const getAllInventories = async (payload: { enterpriseId: string }) => {
+export const getAllInventories = async ({ enterpriseId, search }: { enterpriseId: string, search: string }) => {
   const response = await apiRequestWithAuth(
     "get",
-    `/get-product-list/${payload?.enterpriseId}`
+    `/get-product-list/${enterpriseId}`, {}, { search }
   );
   return response || null;
 };
@@ -126,7 +126,7 @@ export const getBillById = async (billId: string) => {
     const response = await apiRequestWithAuth("get", `/getBillById/${billId}`);
     return response || null;
   } catch (error) {
-    return null;
+    return error;
   }
 };
 
@@ -135,6 +135,6 @@ export const UpdateBill = async (payload: any) => {
     const response = await apiRequestWithAuth("post", "/updateBill", payload);
     return response || null;
   } catch (error) {
-    return null;
+    return error;
   }
 };

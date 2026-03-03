@@ -126,7 +126,7 @@ export default function DashboardPage({ enterpriseId }: { enterpriseId: string }
           {/* Header */}
           <div className="mb-6">
             <h1 className="text-2xl font-bold">Dashboard Overview</h1>
-            <p className="text-muted-foreground">Welcome back, Dr. Johnson. Here&apos;s what&apos;s happening today.</p>
+            <p className="text-muted-foreground">Welcome back Madhav. Here&apos;s what&apos;s happening today.</p>
           </div>
 
           {/* Quick Stats and Revenue */}
@@ -147,9 +147,9 @@ export default function DashboardPage({ enterpriseId }: { enterpriseId: string }
           </div>
 
           {/* Quick Actions and Recent Activity */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <QuickActions />
-          </div>
+          </div> */}
         </main>
       </div>
     </div>

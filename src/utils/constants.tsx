@@ -58,7 +58,7 @@ export function getStatusBadge(status?: string) {
 export function renderStockProgress(inventory: any) {
   const available = inventory.stock.available;
   const soldStock = (inventory.stock.purchased - available) || "00";
-  const total = inventory.quantity;
+  const total = inventory.stock.purchased;
   const percentage = total > 0 ? Math.round((available / total) * 100) : 0;
 
   return (

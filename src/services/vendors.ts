@@ -4,7 +4,7 @@ import {
 } from "@/types/vendors";
 import { apiRequestWithAuth } from "@/utils/axios";
 
-export const getAllVendors = async (payload: { enterpriseId: string }) => {
+export const getAllVendors = async (payload: { enterpriseId: string, search: string; }) => {
   try {
     const response = await apiRequestWithAuth("get", "getVendors", {}, payload);
     return response;

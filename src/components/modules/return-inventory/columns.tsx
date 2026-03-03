@@ -19,9 +19,9 @@ interface ReturnBills {
 }
 
 export const columns: ColumnDef<ReturnBills>[] = [
-  { accessorKey: "id", header: "S.No" },
+  // { accessorKey: "id", header: "S.No" },
   {
-    accessorKey: "item",
+    accessorKey: "name",
     header: "Item",
   },
   {
@@ -46,12 +46,12 @@ export const columns: ColumnDef<ReturnBills>[] = [
     header: "Price",
   },
   {
-    accessorKey: "customerName",
-    header: "Customer Name",
+    accessorKey: "patientName",
+    header: "Patient Name",
   },
   {
-    accessorKey: "address",
-    header: "Customer Address",
+    accessorKey: "patientAddress",
+    header: "Patient Address",
   },
   {
     accessorKey: "quantity",

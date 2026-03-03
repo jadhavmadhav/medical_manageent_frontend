@@ -26,7 +26,7 @@ const ReturnInventoryView = ({ enterpriseId }: { enterpriseId: string }) => {
   return (
     <div className="p-4">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold">Return Bills</h1>
+        <h1 className="text-lg font-bold">Return Bills</h1>
       </div>
       <DataTable columns={columns} data={data?.data || []} />
     </div>

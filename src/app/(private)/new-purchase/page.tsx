@@ -1,10 +1,12 @@
 import AddNewInventories from "@/components/modules/add-inventory/page";
+import InventoryPage from "@/components/modules/new-purchase/page";
 import { getCookie } from "@/utils/getCookie";
 
 const Page = async () => {
   const enterpriseId = await getCookie("enterpriseId");
 
-  return <AddNewInventories enterpriseId={enterpriseId!} />;
+  return <InventoryPage enterpriseId={enterpriseId!} />
+  // <AddNewInventories enterpriseId={enterpriseId!} />;
 };
 
 export default Page;
